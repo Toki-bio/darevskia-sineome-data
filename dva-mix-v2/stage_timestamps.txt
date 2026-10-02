@@ -1,0 +1,40 @@
+21:09:41 Checking FASTA indexes
+21:09:41 indexing dva.bnk
+21:09:47 indexing mix.bnk
+21:09:52 clustering coordinates
+21:09:56 indexing dva.bnk
+21:39:37 [main] CMD: bwa index dva.bnk
+21:39:37 indexing mix.bnk
+22:04:27 [main] CMD: bwa index mix.bnk
+22:04:27 mapping mix flanks on dva genome
+22:04:37 [main] CMD: bwa mem -t 24 dva.bnk mix_flanks_300.bnk
+22:04:38 mapping dva flanks on mix genome
+22:04:48 [main] CMD: bwa mem -t 24 mix.bnk dva_flanks_300.bnk
+22:04:49 mapping complete
+22:04:49 preparing coordinates
+22:04:52 clustering
+22:05:03 working with clusters
+22:05:04 stage1 completed
+22:05:04 preparing coordinates
+22:05:12 merging banks
+22:05:25 extracting
+22:05:29 separating
+22:05:36 stage2 completed
+22:05:36 working with doubles
+22:05:36 splitting doubles into parts of 100
+22:05:37 analyzing parts
+22:47:13 stage3 - aligning doubles - completed
+22:47:13 working with multies
+22:47:13 aligning clusters
+23:44:57 rescuing unresolved multi-copy clusters with both flanks
+23:45:04 20718 multi-copy clusters, 40678 copies without a final alignment to rescue
+23:45:13 [main] CMD: bwa mem -a -t 24 mix.bnk rescue_dva.fa
+23:45:20 [main] CMD: bwa mem -a -t 24 dva.bnk rescue_mix.fa
+00:38:03 rescue: 40678 copies -> resolved 24924, no_concordant_pair 10242, ambiguous 5273, no_hit 239; 22968 new locus pairs
+00:50:08 compressing alignment bundles
+00:50:24 gathering statistics
+00:50:30 writing orth_dva-mix.tsv
+00:50:32 writing clusters_dva-mix.tsv
+00:50:34 Organizing results...
+00:50:36 Cleaning up intermediate files...
+00:50:37 Analysis Complete!

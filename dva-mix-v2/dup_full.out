@@ -1,0 +1,9 @@
+mix ambiguous:2 copies 3365
+queries 200 with >=2 dva loci 200 with <2 loci 0
+frac of A aligned to B  [min,10,25,50,75,90,max] [0.0, 0.081, 0.324, 0.917, 0.999, 1.0, 1.0]
+identity of aligned part [82.306, 90.726, 97.646, 99.432, 99.795, 99.898, 100.0] n with any alignment 197
+aligned bp [0, 811, 3239, 9167, 9994, 10001, 10001]
+frac aligned >= 0.1: 176 ; of which ident>=95: 158
+frac aligned >= 0.5: 136 ; of which ident>=95: 135
+frac aligned >= 0.8: 111 ; of which ident>=95: 111
+same chromosome 0  <100kb apart 0

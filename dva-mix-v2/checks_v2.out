@@ -1,0 +1,44 @@
+orth rows new 91690 old 90808 header same True
+
+== a. stat_multi
+stat_multi lines 11174 {'SINE': 8796, 'PM': 1782, 'MP': 595, 'badRF': 1}
+distinct clusters per class {'SINE': 8796, 'PM': 1782, 'MP': 595, 'badRF': 1} union 11174
+clusters.tsv multi fates {'resolved:PM': 1765, 'multi_unresolved': 10184, 'resolved:SINE': 8011, 'resolved:MP': 570} total multi clusters 20530
+
+== b. doubles regression
+new doubles rows 61261 old non-M rows 61261
+identical as multiset True identical in order True
+new multi-resolved rows 10346 non-M rows in neither double nor multi 0
+
+== c. rescued rows
+M rows 20083 species1 counts {'dva': 20083} species2 {'mix': 20083}
+
+== d. totals
+file ['12941', 'MP', '14514', 'PM', '64235', 'SINE']
+orth status col {'PM': 14514, 'MP': 12941, 'SINE': 64235}
+recount by species cols {'PM': 14514, 'MP': 12941, 'SINE': 64235}
+  doubles status {'PM': 9325, 'MP': 10935, 'SINE': 41001} recount {'PM': 9325, 'MP': 10935, 'SINE': 41001}
+  multi status {'PM': 1765, 'MP': 570, 'SINE': 8011} recount {'PM': 1765, 'MP': 570, 'SINE': 8011}
+  rescue status {'PM': 3424, 'SINE': 15223, 'MP': 1436} recount {'PM': 3424, 'SINE': 15223, 'MP': 1436}
+rows where status != species recount: 0
+
+== e. rescue outcomes by species
+  ('dva', 'ambiguous') 1471
+  ('dva', 'no_concordant_pair') 6523
+  ('dva', 'no_hit') 191
+  ('dva', 'resolved') 18078
+  ('mix', 'ambiguous') 3802
+  ('mix', 'no_concordant_pair') 3719
+  ('mix', 'no_hit') 48
+  ('mix', 'resolved') 6846
+  per species total {'mix': 14415, 'dva': 26263}
+  ambiguous detail {('dva', 'ambiguous:10'): 39, ('dva', 'ambiguous:11'): 25, ('dva', 'ambiguous:12'): 30, ('dva', 'ambiguous:13'): 39, ('dva', 'ambiguous:14'): 39, ('dva', 'ambiguous:15'): 19, ('dva', 'ambiguous:16'): 24, ('dva', 'ambiguous:17'): 10, ('dva', 'ambiguous:18'): 9, ('dva', 'ambiguous:19'): 9, ('dva', 'ambiguous:2'): 973, ('dva', 'ambiguous:20'): 5, ('dva', 'ambiguous:3'): 67, ('dva', 'ambiguous:4'): 43, ('dva', 'ambiguous:5'): 23, ('dva', 'ambiguous:6'): 24, ('dva', 'ambiguous:7'): 23, ('dva', 'ambiguous:8'): 35, ('dva', 'ambiguous:9'): 35, ('mix', 'ambiguous:10'): 37, ('mix', 'ambiguous:11'): 18, ('mix', 'ambiguous:12'): 11, ('mix', 'ambiguous:13'): 17, ('mix', 'ambiguous:14'): 15, ('mix', 'ambiguous:15'): 9, ('mix', 'ambiguous:16'): 12, ('mix', 'ambiguous:17'): 15, ('mix', 'ambiguous:18'): 5, ('mix', 'ambiguous:19'): 5, ('mix', 'ambiguous:2'): 3365, ('mix', 'ambiguous:3'): 92, ('mix', 'ambiguous:4'): 61, ('mix', 'ambiguous:5'): 31, ('mix', 'ambiguous:6'): 26, ('mix', 'ambiguous:7'): 24, ('mix', 'ambiguous:8'): 41, ('mix', 'ambiguous:9'): 18}
+
+== f. reconcile
+copies 40678 resolved 24924
+distinct pairs referenced 22968 copies sharing a pair (sum n-1) 1956 pairs with 2 copies 1956 >2 0
+stat_rescue pairs 22968 {'SINE': 15223, 'PM': 3424, 'badRF': 2268, 'badLF': 288, 'shortRF': 319, 'lfSINE': 10, 'MP': 1436}
+orth M rows 20083 distinct M clusters 20083 status {'PM': 3424, 'SINE': 15223, 'MP': 1436}
+stat_rescue pairs in orth 20083 pairs not in orth 2885 orth M not in stat_rescue 0
+not-in-orth by stat class {'badRF': 2268, 'shortRF': 319, 'badLF': 288, 'lfSINE': 10}
+clusters.tsv rescue column values (top) [('.', 81162), ('rescued:SINE=1', 4261), ('ambiguous=1,rescued:SINE=2', 2426), ('no_concordant_pair=2', 1624), ('rescued:PM=1', 1419), ('no_concordant_pair=1', 1139)]

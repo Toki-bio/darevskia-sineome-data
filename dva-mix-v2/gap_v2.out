@@ -1,0 +1,10 @@
+8011 ('multi', 'resolved', True, 'SINE')
+1765 ('multi', 'resolved', True, 'PM')
+785 ('multi', 'multi_unresolved', False, 'SINE')
+570 ('multi', 'resolved', True, 'MP')
+25 ('multi', 'multi_unresolved', False, 'MP')
+17 ('multi', 'multi_unresolved', False, 'PM')
+1 ('multi', 'multi_unresolved', False, 'badRF')
+./C85542R.cl.mul.doub.doubles.SINE.selected.sel.aligned SINE LF=1113 FL=97 LFcp=291 RFlength=352 FR=97 RFcp=297 OneTwo=91 OneSINE=91 TwoSINE=91 SL=284 SO=324 ST=283 | C85542R	multi	3	multi_unresolved	rescued:PM=1,rescued:SINE=1
+./C67906R.cl.mul.doub.doubles.SINE.selected.sel.aligned SINE LF=1248 FL=96 LFcp=270 RFlength=444 FR=98 RFcp=311 OneTwo=94 OneSINE=92 TwoSINE=93 SL=202 SO=314 ST=199 | C67906R	multi	3	multi_unresolved	no_concordant_pair=1,rescued:SINE=1
+./C8430R.cl.mul.doub.doubles.SINE.selected.sel.aligned SINE LF=1208 FL=99 LFcp=294 RFlength=303 FR=98 RFcp=297 OneTwo=94 OneSINE=92 TwoSINE=93 SL=338 SO=329 ST=332 | C8430R	multi	4	multi_unresolved	ambiguous=1,no_concordant_pair=1,rescued:SINE=2
