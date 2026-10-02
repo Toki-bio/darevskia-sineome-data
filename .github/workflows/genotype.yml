@@ -49,6 +49,7 @@ jobs:
     timeout-minutes: 350
     strategy:
       fail-fast: false
+      max-parallel: 4          # ENA refuses (403) too many concurrent downloads
       matrix:
         include:
           - {sample: v245, run: SRR16117178, part: 1, reads: 90000000}
@@ -81,11 +82,40 @@ jobs:
             take() { if [ "$N" -gt 0 ]; then tail -n +$((4*N*(P-1)+1)) | head -n $((4*N)); else awk -v p=$P 'int((NR-1)/4)%2==p-1'; fi; }
           fi
           echo "reading https://$url (part $P, reads $N)"
+          # ranged download: 256 MB pieces, each retried with backoff, streamed in order
+          cat > fetch.py <<'PY'
+          import sys, time, urllib.request
+          url = sys.argv[1]; CH = 256 << 20; out = sys.stdout.buffer
+          size = int(urllib.request.urlopen(urllib.request.Request(url, method='HEAD'), timeout=120).headers['Content-Length'])
+          print(f'file size {size/1e9:.1f} GB', file=sys.stderr)
+          pos = 0
+          while pos < size:
+              end = min(size, pos + CH) - 1
+              for attempt in range(40):
+                  try:
+                      req = urllib.request.Request(url, headers={'Range': f'bytes={pos}-{end}'})
+                      data = urllib.request.urlopen(req, timeout=300).read()
+                      if len(data) != end - pos + 1:
+                          raise IOError(f'short read {len(data)}')
+                      break
+                  except Exception as e:
+                      print(f'retry {attempt} at {pos}: {e}', file=sys.stderr); time.sleep(min(120, 10 * (attempt + 1)))
+              else:
+                  sys.exit('download failed')
+              try:
+                  out.write(data); out.flush()
+              except BrokenPipeError:
+                  sys.exit(0)
+              pos = end + 1
+          PY
           start=$(date +%s)
-          curl -sSfL --retry 5 "https://$url" | pigz -dc | take \
+          python3 fetch.py "https://$url" | pigz -dc | take \
+            | awk 'NR%4==1 {n++} {print} END {print n+0 > "reads.n"}' \
             | minimap2 -ax sr -t 4 --secondary=no tpl.mmi - 2> mm.log \
             | awk '/^@/ || !and($2,4)' > mapped.sam
-          echo "mapping took $(( $(date +%s) - start )) s; $(grep -vc '^@' mapped.sam) mapped records"; tail -3 mm.log
+          echo "mapping took $(( $(date +%s) - start )) s; $(cat reads.n) reads in, $(grep -vc '^@' mapped.sam) mapped records"; tail -2 mm.log
+          head -2 mapped.sam | cut -c1-200; grep -v '^@' mapped.sam | head -2 | cut -c1-200
+          [ "$(cat reads.n)" -gt 0 ] || { echo "no reads processed"; exit 1; }
           python3 sol/sine_genotype.py count --templates tpl.tsv --sam mapped.sam -o ${{ matrix.sample }}_${{ matrix.part }}.counts
       - uses: actions/upload-artifact@v4
         with: {name: "counts-${{ matrix.sample }}-${{ matrix.part }}", path: "*.counts", retention-days: 5}
