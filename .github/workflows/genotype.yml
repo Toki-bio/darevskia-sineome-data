@@ -1,12 +1,14 @@
 name: genotype valentini from reads
 on:
-  push:
-    branches: [actions/genotype]
-    paths: ['.github/workflows/genotype.yml']
   workflow_dispatch:
+    inputs:
+      samples: {description: 'individuals to map (space separated)', default: 'v245 v5_38 atis teg'}
+      reuse_run: {description: 'run id whose counts-* artifacts stand in for individuals not mapped here', default: ''}
 permissions:
   contents: write
+  actions: read
 env:
+  SEL: ${{ format(' {0} ', inputs.samples || 'v245 v5_38 atis teg') }}
   SOL_REF: 1bbeb29
 jobs:
   templates:
@@ -52,8 +54,8 @@ jobs:
       max-parallel: 4          # ENA refuses (403) too many concurrent downloads
       matrix:
         include:
-          - {sample: v245, run: SRR16117178, part: 1, reads: 90000000}
-          - {sample: v245, run: SRR16117178, part: 2, reads: 90000000}
+          - {sample: v245, run: SRR16117178, part: 1, reads: 90000000, sra_first: 348933889, clip5: 23}   # R1
+          - {sample: v245, run: SRR16117178, part: 2, reads: 90000000, sra_first: 697867777, clip5: 0}    # R2
           - {sample: v5_38, run: SRR16117184, part: 1, reads: 90000000}
           - {sample: v5_38, run: SRR16117184, part: 2, reads: 90000000}
           - {sample: atis, run: SRR16117180, part: 1, reads: 0}
@@ -62,33 +64,43 @@ jobs:
           - {sample: teg, run: SRR16117179, part: 2, reads: 0}
     steps:
       - uses: actions/download-artifact@v4
+        if: contains(env.SEL, format(' {0} ', matrix.sample))
         with: {name: tpl}
       - name: tools
+        if: contains(env.SEL, format(' {0} ', matrix.sample))
         run: |
           sudo apt-get update -q && sudo apt-get install -y -q minimap2 pigz
           git clone -q https://github.com/Toki-bio/SINE_orth_loc sol && git -C sol checkout -q $SOL_REF
           minimap2 -x sr -d tpl.mmi tpl.fa 2>&1 | tail -1
-      - name: stream reads from ENA, map, count
+      - name: stream reads from ENA or NCBI, map, count
+        if: contains(env.SEL, format(' {0} ', matrix.sample))
         run: |
-          for i in $(seq 1 20); do         # the ENA portal sometimes answers with an error text instead of the file list
-            files=$(curl -s "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=${{ matrix.run }}&result=read_run&fields=fastq_ftp&format=tsv" | tail -1 | cut -f2)
-            echo "$files" | grep -q '^ftp\.sra\.ebi\.ac\.uk/.*\.fastq\.gz' && break
-            echo "ENA portal answer not a file list (try $i): $files"; files=; sleep $((15*i))
-          done
-          [ -n "$files" ] || { echo "no file list from ENA"; exit 1; }
-          echo "ENA files: $files"
-          n=$(echo "$files" | tr ';' '\n' | grep -c . || true)
-          N=${{ matrix.reads }}; P=${{ matrix.part }}
-          if [ "$n" -ge 2 ]; then          # one file per mate: part = mate
-            url=$(echo "$files" | tr ';' '\n' | grep "_${P}.fastq.gz")
-            take() { if [ "$N" -gt 0 ]; then head -n $((4*N)); else cat; fi; }
-          else                             # a single file: part 1 = first N reads, part 2 = next N reads
-            url=$(echo "$files" | tr ';' '\n' | head -1)
-            take() { if [ "$N" -gt 0 ]; then tail -n +$((4*N*(P-1)+1)) | head -n $((4*N)); else awk -v p=$P 'int((NR-1)/4)%2==p-1'; fi; }
-          fi
-          echo "reading https://$url (part $P, reads $N)"
-          # ranged download: 256 MB pieces, each retried with backoff, streamed in order
-          cat > fetch.py <<'PY'
+          N=${{ matrix.reads }}; P=${{ matrix.part }}; F="${{ matrix.sra_first }}"
+          if [ -n "$F" ]; then              # NCBI SRA spots F..F+N-1 (10x run loaded as I1, R1, R2 one after another), barcode clipped
+            curl -sSfL --retry 5 https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-ubuntu64.tar.gz | tar xz
+            fd=$(ls -d sratoolkit.*/bin | head -1)/fastq-dump; $fd --version | head -2
+            echo "reading SRA ${{ matrix.run }} spots $F-$((F+N-1)), clipping ${{ matrix.clip5 }} bp"
+            src() { $fd --stdout -N $F -X $((F+N-1)) ${{ matrix.run }} | awk -v c=${{ matrix.clip5 }} 'NR%2==0 && c>0 {$0=substr($0,c+1)} {print}'; }
+            take() { cat; }
+          else
+            for i in $(seq 1 20); do         # the ENA portal sometimes answers with an error text instead of the file list
+              files=$(curl -s "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=${{ matrix.run }}&result=read_run&fields=fastq_ftp&format=tsv" | tail -1 | cut -f2)
+              echo "$files" | grep -q '^ftp\.sra\.ebi\.ac\.uk/.*\.fastq\.gz' && break
+              echo "ENA portal answer not a file list (try $i): $files"; files=; sleep $((15*i))
+            done
+            [ -n "$files" ] || { echo "no file list from ENA"; exit 1; }
+            echo "ENA files: $files"
+            n=$(echo "$files" | tr ';' '\n' | grep -c . || true)
+            if [ "$n" -ge 2 ]; then          # one file per mate: part = mate
+              url=$(echo "$files" | tr ';' '\n' | grep "_${P}.fastq.gz")
+              take() { if [ "$N" -gt 0 ]; then head -n $((4*N)); else cat; fi; }
+            else                             # a single file: part 1 = first N reads, part 2 = next N reads
+              url=$(echo "$files" | tr ';' '\n' | head -1)
+              take() { if [ "$N" -gt 0 ]; then tail -n +$((4*N*(P-1)+1)) | head -n $((4*N)); else awk -v p=$P 'int((NR-1)/4)%2==p-1'; fi; }
+            fi
+            echo "reading https://$url (part $P, reads $N)"
+            # ranged download: 256 MB pieces, each retried with backoff, streamed in order
+            cat > fetch.py <<'PY'
           import sys, time, urllib.request
           url = sys.argv[1]; CH = 256 << 20; out = sys.stdout.buffer
           for attempt in range(40):
@@ -120,8 +132,10 @@ jobs:
                   sys.exit(0)
               pos = end + 1
           PY
+            src() { python3 fetch.py "https://$url" | pigz -dc; }
+          fi
           start=$(date +%s)
-          python3 fetch.py "https://$url" | pigz -dc | take \
+          src | take \
             | awk 'NR%4==1 {n++} {print} END {print n+0 > "reads.n"}' \
             | minimap2 -ax sr -t 4 --secondary=no tpl.mmi - 2> mm.log \
             | awk '/^@/ || !and($2,4)' > mapped.sam
@@ -130,6 +144,7 @@ jobs:
           [ "$(cat reads.n)" -gt 0 ] || { echo "no reads processed"; exit 1; }
           python3 sol/sine_genotype.py count --templates tpl.tsv --sam mapped.sam -o ${{ matrix.sample }}_${{ matrix.part }}.counts
       - uses: actions/upload-artifact@v4
+        if: contains(env.SEL, format(' {0} ', matrix.sample))
         with: {name: "counts-${{ matrix.sample }}-${{ matrix.part }}", path: "*.counts", retention-days: 5}
 
   call:
@@ -142,7 +157,17 @@ jobs:
       - uses: actions/download-artifact@v4
         with: {name: tpl}
       - uses: actions/download-artifact@v4
+        if: inputs.reuse_run != ''
+        with: {pattern: "counts-*", merge-multiple: true, path: prev, run-id: "${{ inputs.reuse_run }}", github-token: "${{ github.token }}"}
+      - uses: actions/download-artifact@v4
         with: {pattern: "counts-*", merge-multiple: true, path: counts}
+      - name: counts of individuals not mapped in this run from the reused run
+        if: inputs.reuse_run != ''
+        run: |
+          for f in prev/*.counts; do
+            s=$(basename $f .counts); s=${s%_*}
+            case "$SEL" in *" $s "*) ;; *) cp -v $f counts/ ;; esac
+          done
       - name: genotype and score
         run: |
           git clone -q https://github.com/Toki-bio/SINE_orth_loc sol && git -C sol checkout -q $SOL_REF
@@ -195,4 +220,5 @@ jobs:
       - name: commit results
         run: |
           git config user.name "github-actions[bot]"; git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add genotype/results && git commit -q -m "Genotypes of D. valentini individuals from reads (run ${{ github.run_id }})" && git push -q origin HEAD:actions/genotype || echo "nothing to commit"
+          git add genotype/results && git commit -q -m "Genotypes of D. valentini individuals from reads (run ${{ github.run_id }})" || { echo "nothing to commit"; exit 0; }
+          for i in 1 2 3 4; do git pull -q --rebase -X theirs origin actions/genotype && git push -q origin HEAD:actions/genotype && break; sleep $((10*i)); done
