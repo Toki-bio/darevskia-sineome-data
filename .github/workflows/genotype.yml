@@ -91,7 +91,14 @@ jobs:
           cat > fetch.py <<'PY'
           import sys, time, urllib.request
           url = sys.argv[1]; CH = 256 << 20; out = sys.stdout.buffer
-          size = int(urllib.request.urlopen(urllib.request.Request(url, method='HEAD'), timeout=120).headers['Content-Length'])
+          for attempt in range(40):
+              try:
+                  size = int(urllib.request.urlopen(urllib.request.Request(url, method='HEAD'), timeout=120).headers['Content-Length'])
+                  break
+              except Exception as e:
+                  print(f'retry {attempt} on size: {e}', file=sys.stderr); time.sleep(min(120, 10 * (attempt + 1)))
+          else:
+              sys.exit('no file size')
           print(f'file size {size/1e9:.1f} GB', file=sys.stderr)
           pos = 0
           while pos < size:
