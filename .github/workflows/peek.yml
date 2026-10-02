@@ -6,12 +6,21 @@ on:
 jobs:
   peek:
     runs-on: ubuntu-latest
+    timeout-minutes: 40
     steps:
-      - run: |
-          for u in ftp.sra.ebi.ac.uk/vol1/fastq/SRR161/078/SRR16117178/SRR16117178.fastq.gz; do
-            echo "== $u"
-            curl -sS --retry 10 --retry-all-errors -r 0-4000000 "https://$u" | gzip -dc 2>/dev/null | head -16 | cut -c1-250
-            echo "-- read lengths of first 2000 records:"
-            curl -sS --retry 10 --retry-all-errors -r 0-4000000 "https://$u" | gzip -dc 2>/dev/null | awk 'NR%4==2{print length($0)}' | head -2000 | sort -n | uniq -c | sort -k1,1nr | head
-          done
-          curl -s "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRR16117178&result=read_run&fields=library_layout,library_strategy,instrument_model,read_count,base_count,fastq_bytes,submitted_ftp,nominal_length&format=tsv"
+      - name: layout of the combined ENA file (first 3 GB compressed)
+        run: |
+          u=https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR161/078/SRR16117178/SRR16117178.fastq.gz
+          start=$(date +%s)
+          (curl -sS --retry 10 -r 0-3000000000 "$u" || true) | (gzip -dc 2>/dev/null || true) | awk '
+            NR%4==1 {split($0,a," "); tag=a[2]}
+            NR%4==2 {n++; L=length($0); key=tag" len"(L>=50?">=50":"<50"); c[key]++
+                     if (key!=prev) {print "record " n ": " $0 " (" tag ", " L " bp)"; prev=key}}
+            END {print n " records"; for (k in c) print k, c[k]}'
+          echo "took $(( $(date +%s) - start )) s"
+      - name: NCBI copies
+        run: |
+          curl -sSI https://sra-pub-run-odp.s3.amazonaws.com/sra/SRR16117178/SRR16117178 | head -5 || true
+          curl -s "https://trace.ncbi.nlm.nih.gov/Traces/sra-db-be/run_new?acc=SRR16117178" | head -c 1500; echo
+          curl -s "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=sra&term=SRR16117178&usehistory=n" | head -c 300; echo
+          curl -s "https://trace.ncbi.nlm.nih.gov/Traces/sra-db-be/runinfo?acc=SRR16117178" | head -3
