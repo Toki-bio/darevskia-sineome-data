@@ -70,7 +70,12 @@ jobs:
           minimap2 -x sr -d tpl.mmi tpl.fa 2>&1 | tail -1
       - name: stream reads from ENA, map, count
         run: |
-          files=$(curl -s "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=${{ matrix.run }}&result=read_run&fields=fastq_ftp&format=tsv" | tail -1 | cut -f2)
+          for i in $(seq 1 20); do         # the ENA portal sometimes answers with an error text instead of the file list
+            files=$(curl -s "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=${{ matrix.run }}&result=read_run&fields=fastq_ftp&format=tsv" | tail -1 | cut -f2)
+            echo "$files" | grep -q '^ftp\.sra\.ebi\.ac\.uk/.*\.fastq\.gz' && break
+            echo "ENA portal answer not a file list (try $i): $files"; files=; sleep $((15*i))
+          done
+          [ -n "$files" ] || { echo "no file list from ENA"; exit 1; }
           echo "ENA files: $files"
           n=$(echo "$files" | tr ';' '\n' | grep -c . || true)
           N=${{ matrix.reads }}; P=${{ matrix.part }}
