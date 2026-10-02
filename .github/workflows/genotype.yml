@@ -1,0 +1,156 @@
+name: genotype valentini from reads
+on:
+  push:
+    branches: [actions/genotype]
+    paths: ['.github/workflows/genotype.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+env:
+  SOL_REF: 1bbeb29
+jobs:
+  templates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: tools
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL || true
+          sudo apt-get update -q && sudo apt-get install -y -q samtools pigz
+          git clone -q https://github.com/Toki-bio/SINE_orth_loc sol && git -C sol checkout -q $SOL_REF
+          df -h .
+      - name: genomes (6 assemblies, dvl left out)
+        run: |
+          mkdir -p g
+          while read sp acc; do
+            url=https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/${acc:4:3}/${acc:7:3}/${acc:10:3}/$acc/${acc}_genomic.fna.gz
+            curl -sSfL --retry 5 "$url" | pigz -dc | awk '/^>/{print $1; next} {print}' > g/$sp.fa
+            samtools faidx g/$sp.fa; echo "$sp: $(wc -l < g/$sp.fa.fai) sequences, $(awk '{s+=$2} END {print s}' g/$sp.fa.fai) bp"
+          done <<'LIST'
+          dva GCA_034642135.1_Dar_val_2.0
+          nai GCA_034642065.1_Dar_nair_1.0
+          mix GCA_034641385.1_Dar_mix_1.0
+          arm GCA_034641395.1_Dar_arm_1.0
+          unp GCA_032766555.1_D.uni.pHiFi.1.0
+          unm GCA_032766585.1_D.uni.mHiFi.1.0
+          LIST
+      - name: templates
+        run: |
+          python3 sol/sine_genotype.py templates --groups genotype/nodvl.groups.tsv.gz \
+            --genome dva=g/dva.fa nai=g/nai.fa mix=g/mix.fa arm=g/arm.fa unp=g/unp.fa unm=g/unm.fa -o tpl
+          ls -la tpl.*
+      - uses: actions/upload-artifact@v4
+        with: {name: tpl, path: "tpl.*", retention-days: 5}
+
+  map:
+    needs: templates
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {sample: v245, run: SRR16117178, part: 1, reads: 90000000}
+          - {sample: v245, run: SRR16117178, part: 2, reads: 90000000}
+          - {sample: v5_38, run: SRR16117184, part: 1, reads: 90000000}
+          - {sample: v5_38, run: SRR16117184, part: 2, reads: 90000000}
+          - {sample: atis, run: SRR16117180, part: 1, reads: 0}
+          - {sample: atis, run: SRR16117180, part: 2, reads: 0}
+          - {sample: teg, run: SRR16117179, part: 1, reads: 0}
+          - {sample: teg, run: SRR16117179, part: 2, reads: 0}
+    steps:
+      - uses: actions/download-artifact@v4
+        with: {name: tpl}
+      - name: tools
+        run: |
+          sudo apt-get update -q && sudo apt-get install -y -q minimap2 pigz
+          git clone -q https://github.com/Toki-bio/SINE_orth_loc sol && git -C sol checkout -q $SOL_REF
+          minimap2 -x sr -d tpl.mmi tpl.fa 2>&1 | tail -1
+      - name: stream reads from ENA, map, count
+        run: |
+          files=$(curl -s "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=${{ matrix.run }}&result=read_run&fields=fastq_ftp&format=tsv" | tail -1 | cut -f2)
+          echo "ENA files: $files"
+          n=$(echo "$files" | tr ';' '\n' | grep -c . || true)
+          N=${{ matrix.reads }}; P=${{ matrix.part }}
+          if [ "$n" -ge 2 ]; then          # one file per mate: part = mate
+            url=$(echo "$files" | tr ';' '\n' | grep "_${P}.fastq.gz")
+            take() { if [ "$N" -gt 0 ]; then head -n $((4*N)); else cat; fi; }
+          else                             # a single file: part 1 = first N reads, part 2 = next N reads
+            url=$(echo "$files" | tr ';' '\n' | head -1)
+            take() { if [ "$N" -gt 0 ]; then tail -n +$((4*N*(P-1)+1)) | head -n $((4*N)); else awk -v p=$P 'int((NR-1)/4)%2==p-1'; fi; }
+          fi
+          echo "reading https://$url (part $P, reads $N)"
+          start=$(date +%s)
+          curl -sSfL --retry 5 "https://$url" | pigz -dc | take \
+            | minimap2 -ax sr -t 4 --secondary=no tpl.mmi - 2> mm.log \
+            | awk '/^@/ || !and($2,4)' > mapped.sam
+          echo "mapping took $(( $(date +%s) - start )) s; $(grep -vc '^@' mapped.sam) mapped records"; tail -3 mm.log
+          python3 sol/sine_genotype.py count --templates tpl.tsv --sam mapped.sam -o ${{ matrix.sample }}_${{ matrix.part }}.counts
+      - uses: actions/upload-artifact@v4
+        with: {name: "counts-${{ matrix.sample }}-${{ matrix.part }}", path: "*.counts", retention-days: 5}
+
+  call:
+    needs: map
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: {name: tpl}
+      - uses: actions/download-artifact@v4
+        with: {pattern: "counts-*", merge-multiple: true, path: counts}
+      - name: genotype and score
+        run: |
+          git clone -q https://github.com/Toki-bio/SINE_orth_loc sol && git -C sol checkout -q $SOL_REF
+          mkdir -p genotype/results
+          for s in v245 v5_38 atis teg; do
+            ls counts/${s}_*.counts >/dev/null 2>&1 || continue
+            python3 sol/sine_genotype.py genotype --templates tpl.tsv counts/${s}_*.counts -o genotype/results/$s.gt.tsv
+          done
+          cp counts/*.counts genotype/results/ 2>/dev/null || true
+          python3 - <<'PY' | tee genotype/results/REPORT.md >> "$GITHUB_STEP_SUMMARY"
+          import csv, gzip, collections, os
+          truth = {r['group']: r['dvl_state'] for r in csv.DictReader(gzip.open('genotype/truth_dvl.tsv.gz', 'rt'), delimiter='\t')}
+          print('# Genotyping D. valentini individuals from Illumina reads\n')
+          print('Pan-SINEome built without dvl (15 pairs), templates from dva, nai, mix, arm, unp, unm.\n')
+          print('## Individual 245 (the dvl assembly) vs its own assembly\n')
+          gts = {}
+          for s in ('v245', 'v5_38', 'atis', 'teg'):
+              p = f'genotype/results/{s}.gt.tsv'
+              if os.path.exists(p):
+                  gts[s] = {r['group']: r for r in csv.DictReader(open(p), delimiter='\t')}
+          if 'v245' in gts:
+              for minq in (0, 20):
+                  m = collections.Counter()
+                  for g, r in gts['v245'].items():
+                      gt = r['GT'] if r['GT'] == './.' or int(r['GQ']) >= minq else './.'
+                      m[(truth.get(g, 'new'), gt)] += 1
+                  print(f'GQ >= {minq}:\n')
+                  print('| assembly state | 0/0 | 0/1 | 1/1 | no call |\n|---|---|---|---|---|')
+                  for t in ('P', 'A', 'U', 'X', 'new'):
+                      print(f"| {t} | {m[(t,'0/0')]} | {m[(t,'0/1')]} | {m[(t,'1/1')]} | {m[(t,'./.')]} |")
+                  ok = m[('P', '1/1')] + m[('A', '0/0')]; bad = m[('P', '0/0')] + m[('A', '1/1')]; het = m[('P', '0/1')] + m[('A', '0/1')]
+                  print(f'\nhomozygous calls agreeing with the assembly: {ok}, contradicting: {bad} ({100*bad/max(1,ok+bad):.2f}%), heterozygous: {het}\n')
+          print('## Genotype counts per individual\n')
+          print('| individual | 0/0 | 0/1 | 1/1 | no call |\n|---|---|---|---|---|')
+          for s, d in gts.items():
+              c = collections.Counter(r['GT'] for r in d.values())
+              print(f"| {s} | {c['0/0']} | {c['0/1']} | {c['1/1']} | {c['./.']} |")
+          print('\n## Agreement between individuals (loci called in both, GQ >= 20)\n')
+          names = list(gts)
+          print('| | ' + ' | '.join(names) + ' |\n|---|' + '---|' * len(names))
+          for a in names:
+              row = []
+              for b in names:
+                  both = [(gts[a][g]['GT'], gts[b][g]['GT']) for g in gts[a] if g in gts[b]
+                          and gts[a][g]['GT'] != './.' and gts[b][g]['GT'] != './.'
+                          and int(gts[a][g]['GQ']) >= 20 and int(gts[b][g]['GQ']) >= 20]
+                  row.append(f"{100*sum(x == y for x, y in both)/max(1,len(both)):.1f}% of {len(both)}")
+              print(f'| {a} | ' + ' | '.join(row) + ' |')
+          PY
+      - name: commit results
+        run: |
+          git config user.name "github-actions[bot]"; git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add genotype/results && git commit -q -m "Genotypes of D. valentini individuals from reads (run ${{ github.run_id }})" && git push -q origin HEAD:actions/genotype || echo "nothing to commit"
