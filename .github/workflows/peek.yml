@@ -1,0 +1,17 @@
+name: peek at ENA fastq heads
+on:
+  push:
+    branches: [actions/genotype]
+    paths: ['.github/workflows/peek.yml']
+jobs:
+  peek:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          for u in ftp.sra.ebi.ac.uk/vol1/fastq/SRR161/078/SRR16117178/SRR16117178.fastq.gz; do
+            echo "== $u"
+            curl -sS --retry 10 --retry-all-errors -r 0-4000000 "https://$u" | gzip -dc 2>/dev/null | head -16 | cut -c1-250
+            echo "-- read lengths of first 2000 records:"
+            curl -sS --retry 10 --retry-all-errors -r 0-4000000 "https://$u" | gzip -dc 2>/dev/null | awk 'NR%4==2{print length($0)}' | head -2000 | sort -n | uniq -c | sort -k1,1nr | head
+          done
+          curl -s "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRR16117178&result=read_run&fields=library_layout,library_strategy,instrument_model,read_count,base_count,fastq_bytes,submitted_ftp,nominal_length&format=tsv"
