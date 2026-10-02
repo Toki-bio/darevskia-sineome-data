@@ -1,0 +1,30 @@
+matrix loci: 149298 (expected 149298); species: dva,dvl,nai,mix,arm,unp,unm
+per-species stats written
+flagged loci: 4608 (expected 4608)
+flag kinds: inconsistent=1903, multicopy=4077
+pairs found: 21
+  arm-dvl: rows=84079 MP=5784 PM=1173 SINE=77122 rej=10016 dup=0
+  arm-unm: rows=62988 MP=6188 PM=2728 SINE=54072 rej=9230 dup=0
+  arm-unp: rows=56641 MP=11848 PM=9469 SINE=35324 rej=18435 dup=0
+  dva-arm: rows=58997 MP=927 PM=4177 SINE=53893 rej=5018 dup=0
+  dva-dvl: rows=86736 MP=2203 PM=455 SINE=84078 rej=8027 dup=0
+  dva-mix: rows=61261 MP=10935 PM=9325 SINE=41001 rej=17782 dup=0
+  dva-nai: rows=54795 MP=7889 PM=4279 SINE=42627 rej=11740 dup=0
+  dva-unm: rows=63802 MP=2700 PM=2704 SINE=58398 rej=8247 dup=0
+  dva-unp: rows=58566 MP=8999 PM=10679 SINE=38888 rej=18530 dup=0
+  mix-arm: rows=58667 MP=7953 PM=11003 SINE=39711 rej=17116 dup=0
+  mix-dvl: rows=83414 MP=11776 PM=12663 SINE=58975 rej=24188 dup=0
+  mix-unm: rows=68462 MP=10871 PM=10598 SINE=46993 rej=18965 dup=0
+  mix-unp: rows=65071 MP=7740 PM=7835 SINE=49496 rej=17343 dup=0
+  nai-arm: rows=53799 MP=7349 PM=7438 SINE=39012 rej=12206 dup=0
+  nai-dvl: rows=78965 MP=9023 PM=6038 SINE=63904 rej=17171 dup=0
+  nai-mix: rows=59160 MP=11177 PM=8797 SINE=39186 rej=16963 dup=0
+  nai-unm: rows=64229 MP=6288 PM=2886 SINE=55055 rej=8852 dup=0
+  nai-unp: rows=61196 MP=7528 PM=4495 SINE=49173 rej=11463 dup=0
+  unm-dvl: rows=90679 MP=3948 PM=3735 SINE=82996 rej=14184 dup=0
+  unp-dvl: rows=80442 MP=11531 PM=12304 SINE=56607 rej=25234 dup=0
+  unp-unm: rows=66158 MP=10276 PM=10606 SINE=45276 rej=19960 dup=0
+total orth rows: 1418107 (expected 1418107)
+total statuses: {'MP': 162933, 'SINE': 1111787, 'PM': 143387}
+cross-check mismatches: 0
+done in 54.1s

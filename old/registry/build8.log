@@ -1,0 +1,18 @@
+1418107 locus pairs from 21 tables
+149298 multi-species loci, 4608 flagged, 44611 variable (P and A) -> registry/darevskia8.loci.tsv .matrix.tsv .patterns.tsv .nex
+top patterns (ddnmauu = dva,dvl,nai,mix,arm,unp,unm):
+  PPPPPPP	20620
+  PPPPUPP	8211
+  PPUPPPP	7323
+  PPPUPUP	6240
+  PPPPPUP	4804
+  UUPUUPU	4675
+  PPPAPAP	3851
+  PPPUPPP	3823
+  PPUUPUU	3475
+  AAAPAAA	2924
+  PPUUPUP	2680
+  UPPPPPP	2660
+  AAPAAPA	2353
+  UPPPUPP	2125
+  UUUPUPU	2071

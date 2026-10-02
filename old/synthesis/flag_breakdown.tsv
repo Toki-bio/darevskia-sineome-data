@@ -1,0 +1,15 @@
+flag	count
+inconsistent:dvl	1455
+multicopy:dva	1254
+multicopy:dvl	727
+multicopy:mix	485
+multicopy:arm	479
+multicopy:nai	459
+multicopy:unp	369
+multicopy:unm	304
+inconsistent:dva	97
+inconsistent:unm	84
+inconsistent:arm	81
+inconsistent:unp	71
+inconsistent:nai	59
+inconsistent:mix	56
