@@ -1,0 +1,47 @@
+SINE Orthologous Loci Analysis Summary
+======================================
+
+Run Date: Пт окт  2 18:50:43 MSK 2026
+Pipeline Version: 2.0
+
+Input Files:
+  Genome 1: /data/V/toki/Darevskia_v2/genomes/dva.fna
+  Genome 2: /data/V/toki/Darevskia_v2/genomes/mix.fna
+  SINE:     /data/V/toki/sol_v2_runs/inputs/dar_squam1.fa
+  BED 1:    /data/V/toki/Darevskia_v2/beds/dva-dar_squam1.bed
+  BED 2:    /data/V/toki/Darevskia_v2/beds/mix-dar_squam1.bed
+
+Analysis Names:
+  Species 1: dva
+  Species 2: mix
+  SINE:      dar_squam1
+
+Results:
+
+Classification Summary:
+  10938 MP
+  16197 PM
+  63673 SINE
+
+Alignments (bundled in results/alignments/aln_dva-mix_*.aln.gz):
+  Plus-Minus (PM):  16197
+  Minus-Plus (MP):  10938
+  Both have SINE:   63673
+
+Output Directory Structure:
+  /data/V/toki/sol_v2_runs/dva-mix/
+    ├── results/
+    │   ├── statbed_dva-mix.bed    (Genomic coordinates)
+    │   ├── statbed_mix-dva.bed    (Reciprocal coordinates)
+    │   ├── MP_PM_SINE_dva-mix.txt (Summary statistics)
+    │   ├── stat_doubles_dva-mix   (Detailed stats - doubles)
+    │   ├── stat_multi_dva-mix     (Detailed stats - multis)
+    │   ├── orth_dva-mix.tsv       (Locus pairs for sine_registry.py)
+    │   ├── clusters_dva-mix.tsv   (Fate of every cluster)
+    │   ├── rescue_dva-mix.tsv     (Two-flank rescue, per copy)
+    │   ├── alignments/                      (Alignment bundles, *.aln.gz)
+    │   └── summary.txt                      (This file)
+    ├── work/                                (Intermediate files)
+    └── pipeline.log                         (Complete log)
+
+Intermediate files were removed (run with --keep-intermediates to preserve)
