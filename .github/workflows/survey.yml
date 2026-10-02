@@ -8,47 +8,41 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - name: assemblies and their read runs
+      - name: SRA runs of the Darevskia projects and the genus
         run: |
           python3 - <<'PY' | tee -a "$GITHUB_STEP_SUMMARY"
-          import json, urllib.request, urllib.parse, time
+          import urllib.request, urllib.parse, time, csv, io, collections
+          E = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/"
           def get(url):
-              for i in range(3):
+              for i in range(4):
                   try:
-                      return urllib.request.urlopen(url, timeout=60).read().decode()
+                      return urllib.request.urlopen(url, timeout=120).read().decode()
                   except Exception as e:
                       err = e; time.sleep(5)
-              return f"ERROR {err}"
-          A = {"dva":"GCA_034642135.1","dvl":"GCA_024498535.1","nai":"GCA_034642065.1","mix":"GCA_034641385.1",
-               "arm":"GCA_034641395.1","unp":"GCA_032766555.1","unm":"GCA_032766585.1"}
-          F = "run_accession,sample_accession,study_accession,instrument_platform,instrument_model,library_strategy,library_layout,base_count,fastq_bytes,submitted_bytes"
-          for code, gca in A.items():
-              r = json.loads(get(f"https://api.ncbi.nlm.nih.gov/datasets/v2/genome/accession/{gca}/dataset_report"))["reports"][0]
-              ai = r.get("assembly_info", {})
-              bs = ai.get("biosample", {}).get("accession"); bp = ai.get("bioproject_accession")
-              print(f"\n## {code} {gca} {r['organism']['organism_name']}")
-              print("```")
-              for k in ("assembly_name","assembly_type","assembly_level","assembly_method","sequencing_tech","description","linked_assemblies","release_date"):
-                  if k in ai: print(f"{k}: {ai[k]}")
-              attrs = {a.get("name"): a.get("value") for a in ai.get("biosample", {}).get("attributes", [])}
-              print("biosample", bs, {k: v for k, v in attrs.items() if k in ("isolate","sex","dev_stage","tissue","geo_loc_name","haplotype","note","description")})
-              print("bioproject", bp, [p.get("title") for p in ai.get("bioproject_lineage", [{}])[0].get("bioprojects", [])])
-              print("```")
-              for acc in (bs, bp):
-                  if not acc: continue
-                  t = get(f"https://www.ebi.ac.uk/ena/portal/api/filereport?accession={acc}&result=read_run&fields={F}&format=tsv")
-                  print(f"read runs for {acc}:\n```\n{t.strip()}\n```")
-          # all Darevskia read runs in ENA
-          tx = json.loads(get("https://www.ebi.ac.uk/ena/taxonomy/rest/scientific-name/Darevskia"))[0]["taxId"]
-          t = get("https://www.ebi.ac.uk/ena/portal/api/search?result=read_run&query=" + urllib.parse.quote(f"tax_tree({tx})") +
-                  "&fields=run_accession,scientific_name,study_accession,instrument_platform,library_strategy,library_source,base_count&limit=0&format=tsv")
-          rows = [l.split("\t") for l in t.strip().split("\n")[1:] if l]
-          import collections
-          c = collections.defaultdict(lambda: [0, 0])
+              return ""
+          def runinfo(term):
+              q = get(E + "esearch.fcgi?db=sra&usehistory=y&retmax=0&term=" + urllib.parse.quote(term))
+              import re
+              n = re.search(r"<Count>(\d+)</Count>", q); we = re.search(r"<WebEnv>(\S+)</WebEnv>", q); qk = re.search(r"<QueryKey>(\d+)</QueryKey>", q)
+              if not n or n.group(1) == "0":
+                  return []
+              t = get(E + f"efetch.fcgi?db=sra&rettype=runinfo&retmode=text&query_key={qk.group(1)}&WebEnv={we.group(1)}")
+              return [r for r in csv.DictReader(io.StringIO(t)) if r.get("Run")]
+          cols = ["Run", "ScientificName", "BioProject", "BioSample", "SampleName", "Platform", "Model", "LibraryStrategy", "LibraryLayout", "bases", "size_MB", "ReleaseDate"]
+          for term in ["PRJNA1029803", "PRJNA1022790", "PRJNA1022791", "SAMN37625718", "PRJNA327916"]:
+              rows = runinfo(term)
+              print(f"\n## SRA: {term} — {len(rows)} runs\n")
+              if rows:
+                  print("| " + " | ".join(cols) + " |\n|" + "---|" * len(cols))
+                  for r in rows:
+                      print("| " + " | ".join(str(r.get(c, "")) for c in cols) + " |")
+          rows = runinfo("Darevskia[Organism]")
+          c = collections.defaultdict(lambda: [0, 0, set()])
           for r in rows:
-              k = (r[1], r[3], r[4], r[5]); c[k][0] += 1; c[k][1] += int(r[6] or 0)
-          print(f"\n## all Darevskia read runs in ENA (taxid {tx}): {len(rows)} runs")
-          print("| species | platform | strategy | source | runs | Gbp |\n|---|---|---|---|---|---|")
-          for k, (n, b) in sorted(c.items()):
-              print(f"| {' | '.join(k)} | {n} | {b/1e9:.1f} |")
+              k = (r["ScientificName"], r["Platform"], r["LibraryStrategy"])
+              c[k][0] += 1; c[k][1] += int(r.get("bases") or 0); c[k][2].add(r["BioProject"])
+          print(f"\n## SRA: all Darevskia — {len(rows)} runs\n")
+          print("| species | platform | strategy | runs | Gbp | projects |\n|---|---|---|---|---|---|")
+          for k, (n, b, p) in sorted(c.items()):
+              print(f"| {' | '.join(k)} | {n} | {b/1e9:.1f} | {', '.join(sorted(p))[:80]} |")
           PY
