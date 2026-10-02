@@ -79,8 +79,14 @@ jobs:
           if [ -n "$F" ]; then              # NCBI SRA spots F..F+N-1 (10x run loaded as I1, R1, R2 one after another), barcode clipped
             curl -sSfL --retry 5 https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-ubuntu64.tar.gz | tar xz
             fd=$(ls -d sratoolkit.*/bin | head -1)/fastq-dump; $fd --version | head -2
+            # the whole run from the NCBI S3 bucket to local disk (remote spot-range reads are far too slow)
+            sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL || true
+            sudo mkdir -p /mnt/sra && sudo chown $USER /mnt/sra; df -h / /mnt | tail -2
+            sra=/mnt/sra/${{ matrix.run }}.sra; t0=$(date +%s)
+            for i in $(seq 1 10); do curl -sSfL -C - -o $sra https://sra-pub-run-odp.s3.amazonaws.com/sra/${{ matrix.run }}/${{ matrix.run }} && break; sleep 30; done
+            echo "downloaded $(du -h $sra | cut -f1) in $(( $(date +%s) - t0 )) s"
             echo "reading SRA ${{ matrix.run }} spots $F-$((F+N-1)), clipping ${{ matrix.clip5 }} bp"
-            src() { $fd --stdout -N $F -X $((F+N-1)) ${{ matrix.run }} | awk -v c=${{ matrix.clip5 }} 'NR%2==0 && c>0 {$0=substr($0,c+1)} {print}'; }
+            src() { timeout 200m $fd --stdout -N $F -X $((F+N-1)) $sra | awk -v c=${{ matrix.clip5 }} 'NR%2==0 && c>0 {$0=substr($0,c+1)} {r[NR%4]=$0} NR%4==0 {print r[1] "\n" r[2] "\n" r[3] "\n" r[0]}'; }   # whole records only (timeout may cut one)
             take() { cat; }
           else
             for i in $(seq 1 20); do         # the ENA portal sometimes answers with an error text instead of the file list
