@@ -42,11 +42,19 @@ clusters. Expect more groups and fewer U once the pairs are rerun.
 
 ## Flags
 
-- `unannotated` (35,414 groups): SINE present by alignment (ComPair.sh) but no annotated copy at
+Counted from the `flags` column of `dar7.groups.tsv`: 35,414 groups carry at least one flag.
+A flag is per species (`unannotated:dva`), so a group can carry several; numbers below are
+groups (species-level entries in brackets).
+
+- `unannotated` (33,570 groups; 103,074 entries): SINE present by alignment (ComPair.sh) but no annotated copy at
   the site — mostly copies below the annotation thresholds (65% identity, 80% length) that a
   partner genome's flank found. In dva–mix, unannotated present sites have a median of 287
   identical nt with the consensus vs 324 for annotated ones.
-- `multicopy` (3,956) and `inconsistent` (1,903): ambiguous groups (state X).
+- `multicopy` (2,880 groups; 3,956 entries) and `inconsistent` (1,626 groups; 1,903 entries):
+  ambiguous groups (state X).
+- `family_mixed` does not occur (one family, dar_squam1). 1,137 groups have family `.`: no
+  annotated copy in any genome (all present sites unannotated). Subfamily is `.` everywhere:
+  dar7 was built without `--subfamilies`.
 
 ## To check: parthenogen assemblies
 
@@ -65,17 +73,19 @@ Adjacencies kept between genomes (groups with a single site in both): mix, unp a
 97-98% of each other's; dva-mix 96%; arm and nai are the outliers (arm-nai 78%).
 
 Species-specific breakpoints (adjacency kept by no other genome) — candidates for misjoins of
-that assembly or rearrangements on its lineage:
+that assembly or rearrangements on its lineage. One count per adjacency: `moved` if at least
+one partner genome has both groups on one chromosome (binned by the smallest such distance),
+otherwise `other chromosome`. Totals equal the per-genome counts printed by `sine_registry.py`.
 
-| genome | other chromosome | moved, 1-100 kb | moved, 0.1-1 Mb | moved, > 1 Mb |
-| :- | -: | -: | -: | -: |
-| dva | 975 | 1,462 | 564 | 14 |
-| dvl | 969 | 2,350 | 229 | 15 |
-| nai | 1,744 | 7,544 | 1,042 | 22 |
-| mix | 1,634 | 466 | 153 | 39 |
-| arm | 1,590 | 6,461 | 2,884 | 33 |
-| unp | 1,527 | 459 | 132 | 38 |
-| unm | 1,059 | 193 | 70 | 18 |
+| genome | total | other chromosome | moved, < 100 kb | moved, 0.1-1 Mb | moved, > 1 Mb |
+| :- | -: | -: | -: | -: | -: |
+| dva | 2,637 | 597 | 1,482 | 544 | 14 |
+| dvl | 3,326 | 732 | 2,371 | 209 | 14 |
+| nai | 9,230 | 622 | 7,658 | 929 | 21 |
+| mix | 2,092 | 1,434 | 476 | 143 | 39 |
+| arm | 10,066 | 688 | 6,612 | 2,733 | 33 |
+| unp | 1,989 | 1,360 | 470 | 121 | 38 |
+| unm | 1,257 | 976 | 199 | 65 | 17 |
 
 `other chromosome` includes adjacencies at scaffold ends of fragmented assemblies. arm and
 nai have thousands of local order changes that no other genome shares; for arm (a collapsed
@@ -83,5 +93,9 @@ assembly of a hybrid) haplotype switching during scaffolding is one candidate ca
 in the alignments / Hi-C maps before any biological reading.
 
 Duplicated blocks (>= 3 consecutive multicopy sites): dva 40 blocks (131 sites), mix 23 (72),
-others 1-4 — consistent with regions assembled twice in dva (see dva-mix: 6,997 mix copies with
-exactly two equal placements in dva).
+others 1-4 — consistent with regions assembled twice in dva. Independently, in the fixed dva–mix
+rerun (`../dva-mix-v2/`) 3,365 mix copies have exactly two equally good placements in dva
+(973 dva copies the other way); for 200 of them tested, the two dva regions are on different
+scaffolds and median 99.4% identical over ~10 kb (55% of pairs aligned over >= 80%):
+uncollapsed haplotigs or segmental duplications (`../dva-mix-v2/notes.md`). The first run
+(`../dva-mix/`, 11771e3, without the multi-stage fix) had 6,997 such mix copies vs 1,026.
