@@ -17,6 +17,9 @@ Code: Toki-bio/SINE_orth_loc, branch claude/wonderful-tesla-x39s12, commit 153d3
 | `dar7.matrix.tsv`, `dar7.patterns.tsv` | group × species states; groups per pattern |
 | `dar7.nex` | NEXUS 0/1 matrix of the 44,601 variable groups (P and A) |
 | `dar7.aliases.tsv` | empty (first build) |
+| `dar7.edges.tsv.gz` | anchor graph: groups whose sites are neighbours along a genome, spacer (bp) per genome (247,529 edges) |
+| `dar7.breakpoints.tsv.gz` | adjacencies of one genome broken in another (groups with one site in both); `a_specific` = kept by no other genome |
+| `dar7.dupblocks.tsv` | runs of >= 3 consecutive multicopy sites in one genome |
 
 ## Caveat: no multi-copy loci
 
@@ -55,3 +58,30 @@ Share of species-specific loci per pair, (MP+PM)/(MP+PM+SINE), from `../old/summ
   the one labelled maternal. Check what mHiFi/pHiFi mean for GCA_032766585 / GCA_032766555
   before any parent-specific interpretation.
 - D. armeniaca: arm – dva 0.087, – mix 0.323: the collapsed assembly is valentini-like.
+
+## Anchor graph (added with SINE_orth_loc 4640840; same groups and IDs as dar7)
+
+Adjacencies kept between genomes (groups with a single site in both): mix, unp and unm keep
+97-98% of each other's; dva-mix 96%; arm and nai are the outliers (arm-nai 78%).
+
+Species-specific breakpoints (adjacency kept by no other genome) — candidates for misjoins of
+that assembly or rearrangements on its lineage:
+
+| genome | other chromosome | moved, 1-100 kb | moved, 0.1-1 Mb | moved, > 1 Mb |
+| :- | -: | -: | -: | -: |
+| dva | 975 | 1,462 | 564 | 14 |
+| dvl | 969 | 2,350 | 229 | 15 |
+| nai | 1,744 | 7,544 | 1,042 | 22 |
+| mix | 1,634 | 466 | 153 | 39 |
+| arm | 1,590 | 6,461 | 2,884 | 33 |
+| unp | 1,527 | 459 | 132 | 38 |
+| unm | 1,059 | 193 | 70 | 18 |
+
+`other chromosome` includes adjacencies at scaffold ends of fragmented assemblies. arm and
+nai have thousands of local order changes that no other genome shares; for arm (a collapsed
+assembly of a hybrid) haplotype switching during scaffolding is one candidate cause. To check
+in the alignments / Hi-C maps before any biological reading.
+
+Duplicated blocks (>= 3 consecutive multicopy sites): dva 40 blocks (131 sites), mix 23 (72),
+others 1-4 — consistent with regions assembled twice in dva (see dva-mix: 6,997 mix copies with
+exactly two equal placements in dva).
