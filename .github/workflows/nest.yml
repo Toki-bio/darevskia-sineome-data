@@ -1,0 +1,88 @@
+name: sine_nest on dva and mix
+on:
+  push:
+    branches: [actions/nest]
+    paths: ['.github/workflows/nest.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+env:
+  SOL_REF: c39d40d
+jobs:
+  nest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+      - name: tools
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL || true
+          sudo apt-get update -q && sudo apt-get install -y -q hmmer bwa samtools pigz gawk
+          git clone -q https://github.com/Toki-bio/SINE_orth_loc sol && git -C sol checkout -q $SOL_REF
+          nhmmer -h | head -2; df -h / | tail -1
+      - name: genomes, copies, consensus
+        run: |
+          mkdir -p g
+          while read sp acc; do
+            url=https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/${acc:4:3}/${acc:7:3}/${acc:10:3}/$acc/${acc}_genomic.fna.gz
+            curl -sSfL --retry 8 --retry-all-errors "$url" | pigz -dc | awk '/^>/{print $1; next} {print}' > g/$sp.fa
+            samtools faidx g/$sp.fa
+            zcat old/beds/$sp-dar_squam1.bed.gz > g/$sp-dar_squam1.bed
+            echo "$sp: $(wc -l < g/$sp.fa.fai) sequences, $(wc -l < g/$sp-dar_squam1.bed) copies"
+          done <<'LIST'
+          dva GCA_034642135.1_Dar_val_2.0
+          mix GCA_034641385.1_Dar_mix_1.0
+          LIST
+          zcat dva-mix-v2/alignments/aln_dva-mix_SINE.aln.gz | awk '/^>dar_squam1/{getline; gsub(/-/,""); print ">dar_squam1\n" toupper($0); exit}' > g/dar_squam1.fa
+          cat g/dar_squam1.fa
+      - name: scan
+        run: |
+          for sp in dva mix; do
+            /usr/bin/time -v python3 sol/sine_nest.py scan --genome g/$sp.fa --copies g/$sp-dar_squam1.bed \
+              --library g/dar_squam1.fa -o nest/nest_$sp --cpu 4 2> nest/scan_$sp.log || { cat nest/scan_$sp.log; exit 1; }
+            grep -E "loci:|Elapsed|Maximum resident" nest/scan_$sp.log
+          done
+      - name: bwa index
+        run: |
+          for sp in dva mix; do ( time bwa index g/$sp.fa ) 2>&1 | tail -3; done
+      - name: compound-locus orthology and supersede
+        run: |
+          python3 sol/sine_nest.py orth --a dva=g/dva.fa --b mix=g/mix.fa --scan nest/nest_dva -o nest/nested_dva-in-mix.tsv --sine-length 357 --threads 4
+          python3 sol/sine_nest.py orth --a mix=g/mix.fa --b dva=g/dva.fa --scan nest/nest_mix -o nest/nested_mix-in-dva.tsv --sine-length 357 --threads 4
+          zcat dva-mix-v2/orth_dva-mix.tsv.gz > orth_dva-mix.tsv
+          python3 sol/sine_nest.py supersede orth_dva-mix.tsv --scan dva=nest/nest_dva mix=nest/nest_mix -o nest/orth_dva-mix.kept.tsv
+          mv nest/orth_dva-mix.kept.tsv.superseded nest/orth_dva-mix.superseded.tsv
+      - name: report
+        run: |
+          python3 - <<'PY' | tee nest/REPORT.md >> "$GITHUB_STEP_SUMMARY"
+          import csv, collections, statistics as st
+          def tsv(p): return list(csv.DictReader(open(p), delimiter='\t'))
+          print('# sine_nest on D. valentini (dva) and D. mixta (mix)\n')
+          for sp in ('dva', 'mix'):
+              loci = tsv(f'nest/nest_{sp}.loci.tsv'); nest = tsv(f'nest/nest_{sp}.nest.tsv')
+              c = collections.Counter(r['class'] for r in loci)
+              print(f'## {sp}\n\nloci by class: ' + ', '.join(f'{k} {v}' for k, v in c.most_common()) + '\n')
+              if nest:
+                  hid = [float(r['host_identity']) for r in nest]; yid = [float(r['insert_identity']) for r in nest]
+                  older = sum(h < y for h, y in zip(hid, yid))
+                  tsd = [int(r['tsd_length']) for r in nest]
+                  print(f'nesting events: {len(nest)}; host identity to consensus median {st.median(hid):.1f}%, '
+                        f'insert {st.median(yid):.1f}%; host more diverged (older) in {older}/{len(nest)}; '
+                        f'TSD found in {sum(t > 0 for t in tsd)}/{len(nest)} (median length {st.median([t for t in tsd if t] or [0])}); '
+                        f'insert orientation same/opposite: {sum(r["insert_orientation"]=="same" for r in nest)}/'
+                        f'{sum(r["insert_orientation"]=="opposite" for r in nest)}\n')
+          print('## Compound-locus orthology\n')
+          for f in ('nested_dva-in-mix', 'nested_mix-in-dva'):
+              rep = tsv(f'nest/{f}.tsv.report'); c = collections.Counter((r['role'], r['outcome'].split(':')[0]) for r in rep)
+              print(f'{f}: ' + ', '.join(f'{a}:{b} {v}' for (a, b), v in sorted(c.items())) + '\n')
+          sup = tsv('nest/orth_dva-mix.superseded.tsv'); kept = tsv('nest/orth_dva-mix.kept.tsv')
+          c = collections.Counter(r['status'] for r in sup)
+          print(f'## Superseded flank-based rows (dva-mix-v2)\n\n{len(sup)} of {len(sup) + len(kept)} rows lie in compound loci: ' +
+                ', '.join(f'{k} {v}' for k, v in c.most_common()) + '\n')
+          PY
+      - name: commit results
+        run: |
+          gzip -f nest/*.tsv nest/*.tsv.report nest/*.bed 2>/dev/null || true
+          git config user.name "github-actions[bot]"; git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add nest && git commit -q -m "sine_nest on dva and mix (run ${{ github.run_id }})" || exit 0
+          for i in 1 2 3; do git pull -q --rebase origin actions/nest && git push -q origin HEAD:actions/nest && break; sleep 10; done
