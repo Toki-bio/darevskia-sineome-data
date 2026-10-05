@@ -7,7 +7,7 @@ on:
 permissions:
   contents: write
 env:
-  SOL_REF: c39d40d
+  SOL_REF: 2ae4660
 jobs:
   nest:
     runs-on: ubuntu-latest
@@ -50,7 +50,7 @@ jobs:
           python3 sol/sine_nest.py orth --a dva=g/dva.fa --b mix=g/mix.fa --scan nest/nest_dva -o nest/nested_dva-in-mix.tsv --sine-length 357 --threads 4
           python3 sol/sine_nest.py orth --a mix=g/mix.fa --b dva=g/dva.fa --scan nest/nest_mix -o nest/nested_mix-in-dva.tsv --sine-length 357 --threads 4
           zcat dva-mix-v2/orth_dva-mix.tsv.gz > orth_dva-mix.tsv
-          python3 sol/sine_nest.py supersede orth_dva-mix.tsv --scan dva=nest/nest_dva mix=nest/nest_mix -o nest/orth_dva-mix.kept.tsv
+          python3 sol/sine_nest.py supersede orth_dva-mix.tsv --scan dva=nest/nest_dva mix=nest/nest_mix --nested nest/nested_dva-in-mix.tsv nest/nested_mix-in-dva.tsv -o nest/orth_dva-mix.kept.tsv
           mv nest/orth_dva-mix.kept.tsv.superseded nest/orth_dva-mix.superseded.tsv
       - name: report
         run: |
@@ -82,7 +82,7 @@ jobs:
           PY
       - name: commit results
         run: |
-          gzip -f nest/*.tsv nest/*.tsv.report nest/*.bed 2>/dev/null || true
+          rm -f nest/*.gz; gzip -f nest/*.tsv nest/*.tsv.report nest/*.bed 2>/dev/null || true
           git config user.name "github-actions[bot]"; git config user.email "github-actions[bot]@users.noreply.github.com"
           git add nest && git commit -q -m "sine_nest on dva and mix (run ${{ github.run_id }})" || exit 0
           for i in 1 2 3; do git pull -q --rebase origin actions/nest && git push -q origin HEAD:actions/nest && break; sleep 10; done
