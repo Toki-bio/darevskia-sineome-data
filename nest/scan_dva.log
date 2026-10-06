@@ -1,22 +1,22 @@
-98947 loci: single 92468, close 5855, dimer 469, split 98, nested 47, satellite 10; 47 nesting events -> nest/nest_dva.nest.tsv
+98947 loci: single 95639, close 2672, dimer 481, split 98, nested 47, satellite 10; 47 nesting events -> nest/nest_dva.nest.tsv
 	Command being timed: "python3 sol/sine_nest.py scan --genome g/dva.fa --copies g/dva-dar_squam1.bed --library g/dar_squam1.fa -o nest/nest_dva --cpu 4"
-	User time (seconds): 402.76
-	System time (seconds): 0.93
-	Percent of CPU this job got: 384%
-	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:45.05
+	User time (seconds): 403.16
+	System time (seconds): 0.86
+	Percent of CPU this job got: 383%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:45.26
 	Average shared text size (kbytes): 0
 	Average unshared data size (kbytes): 0
 	Average stack size (kbytes): 0
 	Average total size (kbytes): 0
-	Maximum resident set size (kbytes): 277872
+	Maximum resident set size (kbytes): 278276
 	Average resident set size (kbytes): 0
 	Major (requiring I/O) page faults: 0
-	Minor (reclaiming a frame) page faults: 131174
-	Voluntary context switches: 569
-	Involuntary context switches: 65635
+	Minor (reclaiming a frame) page faults: 130120
+	Voluntary context switches: 588
+	Involuntary context switches: 57776
 	Swaps: 0
 	File system inputs: 0
-	File system outputs: 286744
+	File system outputs: 286528
 	Socket messages sent: 0
 	Socket messages received: 0
 	Signals delivered: 0

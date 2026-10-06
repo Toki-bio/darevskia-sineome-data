@@ -1,22 +1,22 @@
-85231 loci: single 79817, close 4922, dimer 364, split 89, nested 32, satellite 7; 32 nesting events -> nest/nest_mix.nest.tsv
+85231 loci: single 82485, close 2245, dimer 373, split 89, nested 32, satellite 7; 32 nesting events -> nest/nest_mix.nest.tsv
 	Command being timed: "python3 sol/sine_nest.py scan --genome g/mix.fa --copies g/mix-dar_squam1.bed --library g/dar_squam1.fa -o nest/nest_mix --cpu 4"
-	User time (seconds): 347.89
-	System time (seconds): 0.87
-	Percent of CPU this job got: 383%
-	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:30.90
+	User time (seconds): 345.84
+	System time (seconds): 0.81
+	Percent of CPU this job got: 384%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:30.04
 	Average shared text size (kbytes): 0
 	Average unshared data size (kbytes): 0
 	Average stack size (kbytes): 0
 	Average total size (kbytes): 0
-	Maximum resident set size (kbytes): 239900
+	Maximum resident set size (kbytes): 239516
 	Average resident set size (kbytes): 0
 	Major (requiring I/O) page faults: 0
-	Minor (reclaiming a frame) page faults: 114048
+	Minor (reclaiming a frame) page faults: 114370
 	Voluntary context switches: 506
-	Involuntary context switches: 52434
+	Involuntary context switches: 53653
 	Swaps: 0
 	File system inputs: 0
-	File system outputs: 247512
+	File system outputs: 247328
 	Socket messages sent: 0
 	Socket messages received: 0
 	Signals delivered: 0
