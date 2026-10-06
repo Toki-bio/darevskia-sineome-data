@@ -1,0 +1,235 @@
+name: 21 pairs with SINE_orth_loc v2.2 and pan-SINEome dar8
+# genome (7): download, bwa index, sine_nest scan -> artifact genome-<sp>
+# prep (21): flank mapping and clustering (STAGE=prep) -> prep-<pair>
+# align (21 x 8): alignment batches (STAGE=align SHARD=k/8) -> shard-<pair>-<k>
+# finish (21): merge, two-flank rescue, tables, nested loci (STAGE=finish) -> result-<pair>, bundles-<pair>
+# registry: sine_registry.py build of the 21 tables (--previous pan/dar7) -> commits pairs/ and pan/dar8.*
+on:
+  push:
+    branches: [actions/pairs21]
+    paths: ['.github/workflows/pairs21.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+env:
+  SOL_REF: bdc2134
+  SHARDS: 8
+  THREADS: 4
+jobs:
+  genome:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {sp: dva, acc: GCA_034642135.1}
+          - {sp: dvl, acc: GCA_024498535.1}
+          - {sp: nai, acc: GCA_034642065.1}
+          - {sp: mix, acc: GCA_034641385.1}
+          - {sp: arm, acc: GCA_034641395.1}
+          - {sp: unp, acc: GCA_032766555.1}
+          - {sp: unm, acc: GCA_032766585.1}
+    steps:
+      - uses: actions/checkout@v4
+      - name: tools
+        run: bash .github/pairs21/tools.sh
+      - name: genome, copies, consensus
+        run: |
+          sp=${{ matrix.sp }}; acc=${{ matrix.acc }}; mkdir -p g
+          dir=https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/${acc:4:3}/${acc:7:3}/${acc:10:3}
+          name=$(curl -sSfL --retry 8 --retry-all-errors "$dir/" | grep -o "${acc}_[^/\"<]*" | head -1)
+          echo "$sp = $name"; [ -n "$name" ]
+          curl -sSfL --retry 8 --retry-all-errors "$dir/$name/${name}_genomic.fna.gz" | pigz -dc |
+            awk '/^>/{print $1; next} {print}' > g/$sp.bnk
+          samtools faidx g/$sp.bnk
+          zcat old/beds/$sp-dar_squam1.bed.gz > g/$sp-dar_squam1.bed
+          missing=$(cut -f1 g/$sp-dar_squam1.bed | sort -u | comm -23 - <(cut -f1 g/$sp.bnk.fai | sort))
+          [ -z "$missing" ] || { echo "BED sequences not in the assembly: $(echo $missing | head -c 300)"; exit 1; }
+          echo "$sp $name $(wc -l < g/$sp.bnk.fai) sequences $(awk '{s+=$2} END {print s}' g/$sp.bnk.fai) bp $(wc -l < g/$sp-dar_squam1.bed) copies" | tee g/$sp.assembly
+          zcat dva-mix-v2/alignments/aln_dva-mix_SINE.aln.gz |
+            awk '/^>dar_squam1/{getline; gsub(/-/,""); print ">dar_squam1\n" toupper($0); exit}' > g/dar_squam1.fa
+          cat g/dar_squam1.fa
+      - name: nested, close and satellite copies (sine_nest.py scan)
+        run: |
+          sp=${{ matrix.sp }}; cd g
+          python3 ../sol/sine_nest.py scan --genome $sp.bnk --copies $sp-dar_squam1.bed --library dar_squam1.fa \
+            -o nest_$sp --cpu $THREADS 2> scan_$sp.log || { cat scan_$sp.log; exit 1; }
+          tail -3 scan_$sp.log
+      - name: bwa index
+        run: cd g && ( time bwa index ${{ matrix.sp }}.bnk ) 2>&1 | tail -4
+      - uses: actions/upload-artifact@v4
+        with: {name: 'genome-${{ matrix.sp }}', path: g/, compression-level: 1, retention-days: 4}
+      - uses: actions/upload-artifact@v4
+        with: {name: 'nest-${{ matrix.sp }}', path: "g/nest_*\ng/scan_*.log\ng/*.assembly", retention-days: 30}
+
+  prep:
+    needs: genome
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    strategy:
+      fail-fast: false
+      matrix:
+        pair: [dva-nai, dva-mix, nai-mix, dva-unm, dva-unp, nai-unp, nai-unm, dva-arm, mix-arm, unp-unm, arm-unp,
+               arm-unm, mix-unp, mix-unm, nai-arm, dva-dvl, mix-dvl, nai-dvl, arm-dvl, unm-dvl, unp-dvl]
+    steps:
+      - uses: actions/checkout@v4
+      - name: tools
+        run: bash .github/pairs21/tools.sh
+      - name: genomes
+        run: |
+          p=${{ matrix.pair }}; echo "A=${p%-*}" >> $GITHUB_ENV; echo "B=${p#*-}" >> $GITHUB_ENV
+      - uses: actions/download-artifact@v4
+        with: {name: 'genome-${{ env.A }}', path: w}
+      - uses: actions/download-artifact@v4
+        with: {name: 'genome-${{ env.B }}', path: w}
+      - name: STAGE=prep
+        run: |
+          cd w; clash=$(comm -12 <(cut -f1 $A.bnk.fai | sort) <(cut -f1 $B.bnk.fai | sort) | wc -l)
+          [ "$clash" = 0 ] || { echo "$clash sequence names shared by $A and $B"; exit 1; }
+          STAGE=prep bash ../sol/SINE_orth_loc.bash $A.bnk $B.bnk dar_squam1.fa > prep.log 2>&1 || { tail -30 prep.log; exit 1; }
+          tail -3 prep.log
+          rm -f $A-$B.bnk $A-$B.bnk.fai *.sam
+          tar cf ../prep.tar --exclude='*.bnk' --exclude='*.bnk.amb' --exclude='*.bnk.ann' --exclude='*.bnk.bwt' \
+            --exclude='*.bnk.pac' --exclude='*.bnk.sa' --exclude='nest_*' --exclude='scan_*' .
+          ls -la ../prep.tar
+      - uses: actions/upload-artifact@v4
+        with: {name: 'prep-${{ matrix.pair }}', path: prep.tar, retention-days: 4}
+
+  align:
+    needs: prep
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    strategy:
+      fail-fast: false
+      matrix:
+        pair: [dva-nai, dva-mix, nai-mix, dva-unm, dva-unp, nai-unp, nai-unm, dva-arm, mix-arm, unp-unm, arm-unp,
+               arm-unm, mix-unp, mix-unm, nai-arm, dva-dvl, mix-dvl, nai-dvl, arm-dvl, unm-dvl, unp-dvl]
+        shard: [1, 2, 3, 4, 5, 6, 7, 8]
+    steps:
+      - uses: actions/checkout@v4
+      - name: tools
+        run: bash .github/pairs21/tools.sh
+      - uses: actions/download-artifact@v4
+        with: {name: 'prep-${{ matrix.pair }}', path: .}
+      - name: STAGE=align
+        run: |
+          p=${{ matrix.pair }}; A=${p%-*}; B=${p#*-}; k=${{ matrix.shard }}
+          mkdir w && tar xf prep.tar -C w && cd w && touch $A.bnk $B.bnk
+          start=$(date +%s)
+          STAGE=align SHARD=$k/$SHARDS bash ../sol/SINE_orth_loc.bash $A.bnk $B.bnk dar_squam1.fa > align.log 2> align.err ||
+            { tail -30 align.log align.err; exit 1; }
+          echo "shard $k: $(( $(date +%s) - start )) s" | tee shard_$k/seconds; grep "STAGE=align" align.log
+          gzip -c align.log > shard_$k/align.log.gz
+          tar cf ../shard-$k.tar shard_$k
+      - uses: actions/upload-artifact@v4
+        with: {name: 'shard-${{ matrix.pair }}-${{ matrix.shard }}', path: 'shard-*.tar', retention-days: 4}
+
+  finish:
+    needs: align
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    strategy:
+      fail-fast: false
+      matrix:
+        pair: [dva-nai, dva-mix, nai-mix, dva-unm, dva-unp, nai-unp, nai-unm, dva-arm, mix-arm, unp-unm, arm-unp,
+               arm-unm, mix-unp, mix-unm, nai-arm, dva-dvl, mix-dvl, nai-dvl, arm-dvl, unm-dvl, unp-dvl]
+    steps:
+      - uses: actions/checkout@v4
+      - name: tools
+        run: bash .github/pairs21/tools.sh
+      - name: pair
+        run: |
+          p=${{ matrix.pair }}; echo "A=${p%-*}" >> $GITHUB_ENV; echo "B=${p#*-}" >> $GITHUB_ENV
+      - uses: actions/download-artifact@v4
+        with: {name: 'genome-${{ env.A }}', path: w}
+      - uses: actions/download-artifact@v4
+        with: {name: 'genome-${{ env.B }}', path: w}
+      - uses: actions/download-artifact@v4
+        with: {name: 'prep-${{ matrix.pair }}', path: .}
+      - uses: actions/download-artifact@v4
+        with: {pattern: 'shard-${{ matrix.pair }}-*', path: shards, merge-multiple: true}
+      - name: STAGE=finish
+        run: |
+          tar xf prep.tar -C w; for t in shards/shard-*.tar; do tar xf $t -C w; done
+          n=$(ls -d w/shard_*/ | wc -l); [ "$n" = "$SHARDS" ] || { echo "only $n of $SHARDS shards"; exit 1; }
+          cat w/shard_*/seconds
+          cd w; start=$(date +%s)
+          STAGE=finish bash ../sol/SINE_orth_loc.bash $A.bnk $B.bnk dar_squam1.fa > finish.log 2> finish.err ||
+            { tail -30 finish.log finish.err; exit 1; }
+          echo "finish: $(( $(date +%s) - start )) s"; grep -E "rescue:|compound loci|moved to" finish.log finish.err || true
+          cat MP_PM_SINE_$A-$B.txt
+      - name: collect
+        run: |
+          p=${{ matrix.pair }}; o=$PWD/out/$p; mkdir -p $o bundles
+          cd w
+          cp orth_$p.tsv clusters_$p.tsv MP_PM_SINE_$p.txt $o/
+          for f in rescue_$p.tsv nested_$A-in-$B.tsv nested_$B-in-$A.tsv nested_$A-in-$B.tsv.report \
+                   nested_$B-in-$A.tsv.report stat_doubles_$p stat_multi_$p stat_rescue_$p; do
+            [ -f $f ] && cp $f $o/ || echo "no $f"; done
+          [ -f orth_$p.superseded.tsv ] && cp orth_$p.superseded.tsv $o/superseded_$p.tsv
+          cat shard_*/seconds > $o/timing.txt
+          gzip -c finish.log > $o/finish.log.gz; gzip -c prep.log > $o/prep.log.gz
+          cp aln_${p}_*.aln.gz ../bundles/
+          cd $o && gzip -f *.tsv *.report stat_* 2>/dev/null; ls -la
+      - uses: actions/upload-artifact@v4
+        with: {name: 'result-${{ matrix.pair }}', path: out/, retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        with: {name: 'bundles-${{ matrix.pair }}', path: bundles/, compression-level: 0, retention-days: 90}
+
+  registry:
+    needs: finish
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - name: tools
+        run: |
+          git clone -q https://github.com/Toki-bio/SINE_orth_loc sol && git -C sol checkout -q $SOL_REF
+      - uses: actions/download-artifact@v4
+        with: {pattern: 'result-*', path: pairs, merge-multiple: true}
+      - uses: actions/download-artifact@v4
+        with: {pattern: 'nest-*', path: nest, merge-multiple: true}
+      - name: sine_registry.py build dar8
+        run: |
+          ls pairs; n=$(ls pairs/*/orth_???-???.tsv.gz | wc -l); echo "$n of 21 pair tables"
+          echo "PAIRS_DONE=$n" >> $GITHUB_ENV
+          [ "$n" = 21 ] || { echo "not all pairs finished: registry not built"; exit 0; }
+          args=(); for sp in dva dvl nai mix arm unp unm; do
+            args+=(--copies $sp=old/beds/$sp-dar_squam1.bed.gz --caution $sp=nest/nest_$sp.caution.bed); done
+          python3 sol/sine_registry.py build pairs/*/orth_???-???.tsv.gz --species dva,dvl,nai,mix,arm,unp,unm \
+            "${args[@]}" --previous pan/dar7 -o pan/dar8 2>&1 | tee pan/dar8.build.log
+      - name: report
+        run: |
+          python3 - <<'PY' | tee pairs/REPORT.md >> "$GITHUB_STEP_SUMMARY"
+          import glob, gzip, os, csv, collections
+          print('# 21 pairs, SINE_orth_loc v2.2 (SOL ${{ env.SOL_REF }}, run ${{ github.run_id }})\n')
+          old = {r['pair']: r for r in csv.DictReader(open('old/summary_pairs.tsv'), delimiter='\t')}
+          print('| pair | rows v2.0 (SINE/PM/MP) | rows v2.2 (SINE/PM/MP/MISSING) | nested rows | superseded | shard s (max) |')
+          print('|---|---|---|---|---|---|')
+          for d in sorted(glob.glob('pairs/*-*')):
+              p = os.path.basename(d); f = f'{d}/orth_{p}.tsv.gz'
+              if not os.path.exists(f):
+                  print(f'| {p} | | failed | | | |'); continue
+              rows = list(csv.DictReader(gzip.open(f, 'rt'), delimiter='\t'))
+              c = collections.Counter(r['status'] for r in rows)
+              nested = sum(r['alignment'].startswith('N') for r in rows)
+              sup = f'{d}/superseded_{p}.tsv.gz'
+              ns = sum(1 for _ in gzip.open(sup, 'rt')) - 1 if os.path.exists(sup) else 0
+              t = [int(l.split()[2]) for l in open(f'{d}/timing.txt') if l.startswith('shard')]
+              o = old.get(p, {}).get('mp_pm_sine', '').split()
+              ov = dict(zip(o[1::2], o[0::2]))
+              print(f"| {p} | {ov.get('SINE','')}/{ov.get('PM','')}/{ov.get('MP','')} | "
+                    f"{c['SINE']}/{c['PM']}/{c['MP']}/{c['MISSING']} | {nested} | {ns} | {max(t) if t else ''} |")
+          if os.path.exists('pan/dar8.build.log'):
+              print('\n## Registry dar8\n\n```\n' + open('pan/dar8.build.log').read()[-6000:] + '\n```')
+          PY
+      - name: commit
+        run: |
+          git config user.name "github-actions[bot]"; git config user.email "github-actions[bot]@users.noreply.github.com"
+          find pairs -name '*.gz' -size +95M -print -delete
+          gzip -f pan/dar8.copies.tsv pan/dar8.groups.tsv pan/dar8.evidence.tsv pan/dar8.edges.tsv pan/dar8.breakpoints.tsv 2>/dev/null || true
+          mkdir -p pairs/nest && cp nest/* pairs/nest/ && gzip -f pairs/nest/*.tsv pairs/nest/*.bed 2>/dev/null || true
+          git add pairs pan && git commit -q -m "21 pairs with SINE_orth_loc v2.2 ($PAIRS_DONE done) and pan-SINEome dar8 (run ${{ github.run_id }})" || exit 0
+          for i in 1 2 3; do git pull -q --rebase origin actions/pairs21 && git push -q origin HEAD:actions/pairs21 && break; sleep 10; done
