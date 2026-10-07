@@ -8,6 +8,16 @@ that is checked before the next step starts. Compute: GitHub Actions on the publ
 ready-to-paste prompt for the local Claude, which runs them under the KIT rules (one persistent connection,
 nothing written to `/data/V/toki/Darevskia_v2`).
 
+## Status 2026-10-07 (paused)
+
+| item | state | waits for |
+|---|---|---|
+| subfamilies (SubFam, 30,000 copies) | page published (`subfam/dar_squam1_30000/`, Pages) | **your peeling** — blocks all SINE work |
+| 1 haplotigs / satellites, 4 genes, 5 dimers | designs done (`plans/dimers-satellites.md`) | subfamilies |
+| 2 minimap2 synteny | not started | subfamilies (genome-level, could run earlier on request) |
+| 3 Cactus | prompt for Monsoon (`plans/cactus-monsoon-prompt.md`) | you starting it on Monsoon |
+| 6 M recovery (sineclose), 7 BPP | 500-locus BPP test done (`bpp/test500/NOTES.md`): runs fit a cloud runner, but the parthenogen assemblies are haplotype mosaics | raw reads (phasing, several individuals) |
+
 ## Facts the plan rests on (checked 2026-10-07)
 
 | | dva | dvl | nai | mix | arm | unp | unm |
