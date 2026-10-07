@@ -229,7 +229,14 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"; git config user.email "github-actions[bot]@users.noreply.github.com"
           find pairs -name '*.gz' -size +95M -print -delete
-          gzip -f pan/dar8.copies.tsv pan/dar8.groups.tsv pan/dar8.evidence.tsv pan/dar8.edges.tsv pan/dar8.breakpoints.tsv 2>/dev/null || true
+          gzip -f pan/dar8.copies.tsv pan/dar8.groups.tsv pan/dar8.edges.tsv pan/dar8.breakpoints.tsv 2>/dev/null || true
+          # the evidence table exceeds GitHub's 100 MB file limit gzipped: parts of at most 250 MB uncompressed, each with the header
+          if [ -f pan/dar8.evidence.tsv ]; then
+            tail -n +2 pan/dar8.evidence.tsv | split -C 250M -d -a 2 - pan/dar8.evidence.part
+            for f in pan/dar8.evidence.part??; do { head -1 pan/dar8.evidence.tsv; cat $f; } | gzip > $f.tsv.gz; rm $f; done
+            rm pan/dar8.evidence.tsv; ls -la pan/dar8.evidence.part*
+          fi
           mkdir -p pairs/nest && cp nest/* pairs/nest/ && gzip -f pairs/nest/*.tsv pairs/nest/*.bed 2>/dev/null || true
           git add pairs pan && git commit -q -m "21 pairs with SINE_orth_loc v2.2 ($PAIRS_DONE done) and pan-SINEome dar8 (run ${{ github.run_id }})" || exit 0
-          for i in 1 2 3; do git pull -q --rebase origin actions/pairs21 && git push -q origin HEAD:actions/pairs21 && break; sleep 10; done
+          for i in 1 2 3; do git pull -q --rebase origin actions/pairs21 && git push -q origin HEAD:actions/pairs21 && exit 0; sleep 10; done
+          echo 'push failed'; exit 1

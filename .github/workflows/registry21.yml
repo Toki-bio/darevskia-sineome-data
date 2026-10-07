@@ -1,0 +1,73 @@
+name: dar8 registry from the artifacts of the 21-pair run 37462585105
+on:
+  push:
+    branches: [actions/pairs21]
+    paths: ['.github/workflows/registry21.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+env:
+  SOL_REF: bdc2134
+jobs:
+  registry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - name: tools
+        run: |
+          git clone -q https://github.com/Toki-bio/SINE_orth_loc sol && git -C sol checkout -q $SOL_REF
+      - uses: actions/download-artifact@v4
+        with: {pattern: 'result-*', path: pairs, merge-multiple: true, run-id: 37462585105, github-token: '${{ github.token }}'}
+      - uses: actions/download-artifact@v4
+        with: {pattern: 'nest-*', path: nest, merge-multiple: true, run-id: 37462585105, github-token: '${{ github.token }}'}
+      - name: sine_registry.py build dar8
+        run: |
+          ls pairs; n=$(ls pairs/*/orth_???-???.tsv.gz | wc -l); echo "$n of 21 pair tables"
+          echo "PAIRS_DONE=$n" >> $GITHUB_ENV
+          [ "$n" = 21 ] || { echo "not all pairs finished: registry not built"; exit 0; }
+          args=(); for sp in dva dvl nai mix arm unp unm; do
+            args+=(--copies $sp=old/beds/$sp-dar_squam1.bed.gz --caution $sp=nest/nest_$sp.caution.bed); done
+          python3 sol/sine_registry.py build pairs/*/orth_???-???.tsv.gz --species dva,dvl,nai,mix,arm,unp,unm \
+            "${args[@]}" --previous pan/dar7 -o pan/dar8 2>&1 | tee pan/dar8.build.log
+      - name: report
+        run: |
+          python3 - <<'PY' | tee pairs/REPORT.md >> "$GITHUB_STEP_SUMMARY"
+          import glob, gzip, os, csv, collections
+          print('# 21 pairs, SINE_orth_loc v2.2 (SOL ${{ env.SOL_REF }}, run 37462585105, registry ${{ github.run_id }})\n')
+          old = {r['pair']: r for r in csv.DictReader(open('old/summary_pairs.tsv'), delimiter='\t')}
+          print('| pair | rows v2.0 (SINE/PM/MP) | rows v2.2 (SINE/PM/MP/MISSING) | nested rows | superseded | shard s (max) |')
+          print('|---|---|---|---|---|---|')
+          for d in sorted(glob.glob('pairs/*-*')):
+              p = os.path.basename(d); f = f'{d}/orth_{p}.tsv.gz'
+              if not os.path.exists(f):
+                  print(f'| {p} | | failed | | | |'); continue
+              rows = list(csv.DictReader(gzip.open(f, 'rt'), delimiter='\t'))
+              c = collections.Counter(r['status'] for r in rows)
+              nested = sum(r['alignment'].startswith('N') for r in rows)
+              sup = f'{d}/superseded_{p}.tsv.gz'
+              ns = sum(1 for _ in gzip.open(sup, 'rt')) - 1 if os.path.exists(sup) else 0
+              t = [int(l.split()[2]) for l in open(f'{d}/timing.txt') if l.startswith('shard')]
+              o = old.get(p, {}).get('mp_pm_sine', '').split()
+              ov = dict(zip(o[1::2], o[0::2]))
+              print(f"| {p} | {ov.get('SINE','')}/{ov.get('PM','')}/{ov.get('MP','')} | "
+                    f"{c['SINE']}/{c['PM']}/{c['MP']}/{c['MISSING']} | {nested} | {ns} | {max(t) if t else ''} |")
+          if os.path.exists('pan/dar8.build.log'):
+              print('\n## Registry dar8\n\n```\n' + open('pan/dar8.build.log').read()[-6000:] + '\n```')
+          PY
+      - name: commit
+        run: |
+          git config user.name "github-actions[bot]"; git config user.email "github-actions[bot]@users.noreply.github.com"
+          find pairs -name '*.gz' -size +95M -print -delete
+          gzip -f pan/dar8.copies.tsv pan/dar8.groups.tsv pan/dar8.edges.tsv pan/dar8.breakpoints.tsv 2>/dev/null || true
+          # the evidence table exceeds GitHub's 100 MB file limit gzipped: parts of at most 250 MB uncompressed, each with the header
+          if [ -f pan/dar8.evidence.tsv ]; then
+            tail -n +2 pan/dar8.evidence.tsv | split -C 250M -d -a 2 - pan/dar8.evidence.part
+            for f in pan/dar8.evidence.part??; do { head -1 pan/dar8.evidence.tsv; cat $f; } | gzip > $f.tsv.gz; rm $f; done
+            rm pan/dar8.evidence.tsv; ls -la pan/dar8.evidence.part*
+          fi
+          mkdir -p pairs/nest && cp nest/* pairs/nest/ && gzip -f pairs/nest/*.tsv pairs/nest/*.bed 2>/dev/null || true
+          git add pairs pan && git commit -q -m "21 pairs with SINE_orth_loc v2.2 ($PAIRS_DONE done) and pan-SINEome dar8 (run 37462585105, registry ${{ github.run_id }})" || exit 0
+          for i in 1 2 3; do git pull -q --rebase origin actions/pairs21 && git push -q origin HEAD:actions/pairs21 && exit 0; sleep 10; done
+          echo 'push failed'; exit 1
