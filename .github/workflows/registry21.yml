@@ -20,7 +20,7 @@ jobs:
           git clone -q https://github.com/Toki-bio/SINE_orth_loc sol && git -C sol checkout -q $SOL_REF
       - uses: actions/download-artifact@v4
         with: {pattern: 'result-*', path: pairs, merge-multiple: true, run-id: 37462585105, github-token: '${{ github.token }}'}
-      - name: nest artifacts (by name: the run has more than the 200 artifacts a pattern download lists)
+      - name: nest artifacts, by name (a pattern download lists only 200 of the 245 artifacts of the run)
         env: {GH_TOKEN: '${{ github.token }}'}
         run: |
           mkdir -p nest
