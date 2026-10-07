@@ -1,0 +1,106 @@
+name: BPP test on flanks of orthologous SINE insertions
+# loci: left + right flank (250 bp each, SINE removed) of dar8 groups present as one unflagged copy in all 7 genomes,
+# >= 200 kb apart on unm. A01 (species tree) on val (dva, dvl), nai, mix, unp, unm, then A00 on its best tree.
+# started by a push that changes bpp/request.txt (one line: number of loci)
+on:
+  push:
+    branches: [bpp]
+    paths: ['bpp/request.txt']
+  workflow_dispatch:
+permissions:
+  contents: write
+env:
+  BPP_TAG: v4.8.7
+jobs:
+  bpp:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - name: tools
+        run: |
+          sudo apt-get update -q && sudo apt-get install -y -q mafft samtools pigz > /dev/null
+          git clone -q --depth 1 --branch $BPP_TAG https://github.com/bpp/bpp bppsrc && make -C bppsrc/src -j4 > /dev/null
+          echo "$PWD/bppsrc/src" >> $GITHUB_PATH; bppsrc/src/bpp --version | head -1
+      - name: select loci
+        run: |
+          N=$(tr -dc 0-9 < bpp/request.txt); D=bpp/test$N; mkdir -p $D g
+          echo "N=$N" >> $GITHUB_ENV; echo "D=$D" >> $GITHUB_ENV
+          git show origin/actions/pairs21:pan/dar8.groups.tsv.gz > g/dar8.groups.tsv.gz
+          python3 bpp/bpp_loci.py select --groups g/dar8.groups.tsv.gz --n $N --spacing 200000 --seed 11 -o $D/loci.tsv 2>&1 | tee $D/select.log
+      - name: flanks from the 7 assemblies
+        run: |
+          : > g/flanks.fa
+          while read sp acc; do
+            dir=https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/${acc:4:3}/${acc:7:3}/${acc:10:3}
+            name=$(curl -sSfL --retry 8 --retry-all-errors "$dir/" | grep -o "${acc}_[^/\"<]*" | head -1)
+            curl -sSfL --retry 8 --retry-all-errors "$dir/$name/${name}_genomic.fna.gz" | pigz -dc |
+              awk '/^>/{print $1; next} {print}' > g/genome.fa
+            samtools faidx g/genome.fa
+            python3 bpp/bpp_loci.py extract --loci $D/loci.tsv --species $sp --genome g/genome.fa >> g/flanks.fa
+            echo "$sp $name: $(grep -c '>' g/flanks.fa) flank sequences so far"; rm -f g/genome.fa g/genome.fa.fai
+          done <<'LIST'
+          dva GCA_034642135.1
+          dvl GCA_024498535.1
+          nai GCA_034642065.1
+          mix GCA_034641385.1
+          arm GCA_034641395.1
+          unp GCA_032766555.1
+          unm GCA_032766585.1
+          LIST
+          pigz -c g/flanks.fa > $D/flanks.fa.gz
+      - name: alignments
+        run: |
+          printf 'dva val\ndvl val\nnai nai\nmix mix\narm arm\nunp unp\nunm unm\n' > $D/imap7.txt
+          python3 bpp/bpp_loci.py build --loci $D/loci.tsv --fasta g/flanks.fa --imap $D/imap7.txt -o $D/all7 2>&1 | tee $D/build.log
+          python3 bpp/bpp_loci.py build --loci $D/loci.tsv --fasta g/flanks.fa --imap $D/imap7.txt -o $D/noarm --exclude arm 2>&1 | tee -a $D/build.log
+          echo "NLOCI=$(grep -c '^\^dva' $D/noarm.txt)" >> $GITHUB_ENV
+      - name: A01 species tree (val, nai, mix, unp, unm)
+        run: |
+          cd $D
+          cat > a01.ctl <<CTL
+          seed = 11
+          seqfile = noarm.txt
+          Imapfile = noarm.Imap.txt
+          jobname = a01
+          speciesdelimitation = 0
+          speciestree = 1
+          species&tree = 5  val nai mix unp unm
+                            2   1   1   1   1
+                            ((val, unp), (mix, (nai, unm)));
+          usedata = 1
+          nloci = $NLOCI
+          cleandata = 0
+          thetaprior = invgamma 3 0.01
+          tauprior = invgamma 3 0.02
+          finetune = 1
+          print = 1 0 0 0
+          burnin = 20000
+          sampfreq = 4
+          nsample = 20000
+          threads = 4
+          CTL
+          ( time bpp --cfile a01.ctl > a01.log 2>&1 ) 2> a01.time; cat a01.time; grep -A8 "(A) Best trees" a01.txt | head -10
+      - name: A00 on the best A01 tree
+        run: |
+          cd $D
+          TREE=$(python3 -c "
+          import re
+          t = open('a01.txt').read().split('(A) Best trees')[1]
+          for line in t.splitlines():
+              if '(' in line and ';' in line:
+                  print(re.sub(r'[#:][0-9][0-9.eE-]*', '', line[line.index('('):line.index(';') + 1]).replace(' ', '')); break")
+          echo "best A01 tree: $TREE" | tee a00.tree
+          sed -e 's/^jobname = a01/jobname = a00/' -e 's/^speciestree = 1/speciestree = 0/' -e "s/^\( *\)((val, unp), (mix, (nai, unm)));/\1$TREE/" -e 's/^burnin = 20000/burnin = 10000/' a01.ctl > a00.ctl
+          grep -A2 "species&tree" a00.ctl
+          ( time bpp --cfile a00.ctl > a00.log 2>&1 ) 2> a00.time; cat a00.time
+          grep -A20 "param     mean" a00.txt | head -22
+      - name: commit
+        if: always()
+        run: |
+          rm -f $D/*.compressed-aln.phy
+          git config user.name "github-actions[bot]"; git config user.email "github-actions[bot]@users.noreply.github.com"
+          gzip -f $D/*.mcmc.txt 2>/dev/null || true
+          git add $D && git commit -q -m "BPP test on $N loci (run ${{ github.run_id }})" || exit 0
+          for i in 1 2 3; do git pull -q --rebase origin bpp && git push -q origin HEAD:bpp && exit 0; sleep 10; done; exit 1
