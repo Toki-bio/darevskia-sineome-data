@@ -20,8 +20,15 @@ jobs:
           git clone -q https://github.com/Toki-bio/SINE_orth_loc sol && git -C sol checkout -q $SOL_REF
       - uses: actions/download-artifact@v4
         with: {pattern: 'result-*', path: pairs, merge-multiple: true, run-id: 37462585105, github-token: '${{ github.token }}'}
-      - uses: actions/download-artifact@v4
-        with: {pattern: 'nest-*', path: nest, merge-multiple: true, run-id: 37462585105, github-token: '${{ github.token }}'}
+      - name: nest artifacts (by name: the run has more than the 200 artifacts a pattern download lists)
+        env: {GH_TOKEN: '${{ github.token }}'}
+        run: |
+          mkdir -p nest
+          for sp in dva dvl nai mix arm unp unm; do
+            id=$(gh api "repos/${{ github.repository }}/actions/runs/37462585105/artifacts?name=nest-$sp" --jq '.artifacts[0].id')
+            gh api "repos/${{ github.repository }}/actions/artifacts/$id/zip" > nest-$sp.zip && unzip -o -q nest-$sp.zip -d nest && rm nest-$sp.zip
+          done
+          ls nest; for sp in dva dvl nai mix arm unp unm; do [ -s nest/nest_$sp.caution.bed ] || { echo "no caution BED for $sp"; exit 1; }; done
       - name: sine_registry.py build dar8
         run: |
           ls pairs; n=$(ls pairs/*/orth_???-???.tsv.gz | wc -l); echo "$n of 21 pair tables"
@@ -29,6 +36,7 @@ jobs:
           [ "$n" = 21 ] || { echo "not all pairs finished: registry not built"; exit 0; }
           args=(); for sp in dva dvl nai mix arm unp unm; do
             args+=(--copies $sp=old/beds/$sp-dar_squam1.bed.gz --caution $sp=nest/nest_$sp.caution.bed); done
+          set -o pipefail
           python3 sol/sine_registry.py build pairs/*/orth_???-???.tsv.gz --species dva,dvl,nai,mix,arm,unp,unm \
             "${args[@]}" --previous pan/dar7 -o pan/dar8 2>&1 | tee pan/dar8.build.log
       - name: report

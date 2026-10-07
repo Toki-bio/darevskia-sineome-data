@@ -5,9 +5,6 @@ name: 21 pairs with SINE_orth_loc v2.2 and pan-SINEome dar8
 # finish (21): merge, two-flank rescue, tables, nested loci (STAGE=finish) -> result-<pair>, bundles-<pair>
 # registry: sine_registry.py build of the 21 tables (--previous pan/dar7) -> commits pairs/ and pan/dar8.*
 on:
-  push:
-    branches: [actions/pairs21]
-    paths: ['.github/workflows/pairs21.yml']
   workflow_dispatch:
 permissions:
   contents: write
@@ -198,6 +195,7 @@ jobs:
           [ "$n" = 21 ] || { echo "not all pairs finished: registry not built"; exit 0; }
           args=(); for sp in dva dvl nai mix arm unp unm; do
             args+=(--copies $sp=old/beds/$sp-dar_squam1.bed.gz --caution $sp=nest/nest_$sp.caution.bed); done
+          set -o pipefail
           python3 sol/sine_registry.py build pairs/*/orth_???-???.tsv.gz --species dva,dvl,nai,mix,arm,unp,unm \
             "${args[@]}" --previous pan/dar7 -o pan/dar8 2>&1 | tee pan/dar8.build.log
       - name: report
