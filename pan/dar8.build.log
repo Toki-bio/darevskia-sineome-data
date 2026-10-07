@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/home/runner/work/darevskia-sineome-data/darevskia-sineome-data/sol/sine_registry.py", line 833, in <module>
+    main()
+  File "/home/runner/work/darevskia-sineome-data/darevskia-sineome-data/sol/sine_registry.py", line 829, in main
+    args.func(args)
+  File "/home/runner/work/darevskia-sineome-data/darevskia-sineome-data/sol/sine_registry.py", line 436, in cmd_build
+    with open_text(path) as fh:
+         ^^^^^^^^^^^^^^^
+  File "/home/runner/work/darevskia-sineome-data/darevskia-sineome-data/sol/sine_registry.py", line 58, in open_text
+    return gzip.open(path, 'rt') if path.endswith('.gz') else open(path)
+                                                              ^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'nest/nest_dva.caution.bed'
