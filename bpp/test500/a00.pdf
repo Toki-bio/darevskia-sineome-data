@@ -1,0 +1,641 @@
+%PDF-1.3
+%«Ïè¢
+1 0 obj
+<<
+  /Creator (bpp4.7.1)
+  /Producer (bpp4.7.1)
+  /Title (Binary species tree)
+  /Author (Tomas Flouri)
+  /CreationDate (D:Today)
+>>
+endobj
+2 0 obj
+<<
+  /Type /Pages
+  /Kids [ 5 0 R ]
+  /Count 1
+>>
+endobj
+3 0 obj
+<<
+  /Type /Catalog
+  /Pages 2 0 R
+>>
+endobj
+4 0 obj
+<<
+  /Type /Font
+  /Subtype /Type1
+  /BaseFont /Times-Roman
+  /Encoding /WinAnsiEncoding
+>>
+endobj
+5 0 obj
+<<
+  /Type /Page
+  /Parent 2 0 R
+  /MediaBox [0 0 841.889771 595.275574]
+  /Resources <<
+    /Font <<
+      /F1 4 0 R
+      /F2 6 0 R
+      /F3 60 0 R
+    >>
+    /ExtGState <<
+      /GS0 <</ca 1.000000>>
+      /GS1 <</ca 0.933333>>
+      /GS2 <</ca 0.866667>>
+      /GS3 <</ca 0.800000>>
+      /GS4 <</ca 0.733333>>
+      /GS5 <</ca 0.666667>>
+      /GS6 <</ca 0.600000>>
+      /GS7 <</ca 0.533333>>
+      /GS8 <</ca 0.466667>>
+      /GS9 <</ca 0.400000>>
+      /GS10 <</ca 0.333333>>
+      /GS11 <</ca 0.266667>>
+      /GS12 <</ca 0.200000>>
+      /GS13 <</ca 0.133333>>
+      /GS14 <</ca 0.066667>>
+      /GS15 <</ca 0.000000>>
+    >>
+  >>
+  /Contents [
+7 0 R
+8 0 R
+9 0 R
+10 0 R
+11 0 R
+12 0 R
+13 0 R
+14 0 R
+15 0 R
+16 0 R
+17 0 R
+18 0 R
+19 0 R
+20 0 R
+21 0 R
+22 0 R
+23 0 R
+24 0 R
+25 0 R
+26 0 R
+27 0 R
+28 0 R
+29 0 R
+30 0 R
+31 0 R
+32 0 R
+33 0 R
+34 0 R
+35 0 R
+36 0 R
+37 0 R
+38 0 R
+39 0 R
+40 0 R
+41 0 R
+42 0 R
+43 0 R
+44 0 R
+45 0 R
+46 0 R
+47 0 R
+48 0 R
+49 0 R
+50 0 R
+51 0 R
+52 0 R
+53 0 R
+54 0 R
+55 0 R
+56 0 R
+57 0 R
+58 0 R
+59 0 R
+61 0 R
+62 0 R
+63 0 R
+64 0 R
+]
+>>
+endobj
+6 0 obj
+<<
+  /Type /Font
+  /Subtype /Type1
+  /BaseFont /Helvetica
+  /Encoding /WinAnsiEncoding
+>>
+endobj
+7 0 obj
+<< /Length 77 >>stream
+0.921569 0.921569 0.921569 rg 50.000000 60.000000 701.889771 495.275574 re f 
+endstream
+endobj
+8 0 obj
+<< /Length 105 >>stream
+1.500000 w
+50.000000 60.000000 m
+/DeviceRGB CS
+0.000000 0.000000 0.000000 RG
+751.889771 60.000000 l S
+endstream
+endobj
+9 0 obj
+<< /Length 104 >>stream
+1.500000 w
+50.000000 57.000000 m
+/DeviceRGB CS
+0.000000 0.000000 0.000000 RG
+50.000000 63.000000 l S
+endstream
+endobj
+10 0 obj
+<< /Length 106 >>stream
+1.500000 w
+751.889771 57.000000 m
+/DeviceRGB CS
+0.000000 0.000000 0.000000 RG
+751.889771 63.000000 l S
+endstream
+endobj
+11 0 obj
+<< /Length 106 >>stream
+1.500000 w
+651.619812 57.000000 m
+/DeviceRGB CS
+0.000000 0.000000 0.000000 RG
+651.619812 63.000000 l S
+endstream
+endobj
+12 0 obj
+<< /Length 146 >>stream
+BT /GS0 gs 0.258819 -0.965926 0.965926 0.258819 654.619812 57.000000 Tm /F2 8.000000 Tf 0.000000 0.000000 0.000000 rg 0.000000 Tc (0.001230) Tj ET
+endstream
+endobj
+13 0 obj
+<< /Length 106 >>stream
+1.500000 w
+551.349854 57.000000 m
+/DeviceRGB CS
+0.000000 0.000000 0.000000 RG
+551.349854 63.000000 l S
+endstream
+endobj
+14 0 obj
+<< /Length 146 >>stream
+BT /GS0 gs 0.258819 -0.965926 0.965926 0.258819 554.349854 57.000000 Tm /F2 8.000000 Tf 0.000000 0.000000 0.000000 rg 0.000000 Tc (0.002460) Tj ET
+endstream
+endobj
+15 0 obj
+<< /Length 106 >>stream
+1.500000 w
+451.079865 57.000000 m
+/DeviceRGB CS
+0.000000 0.000000 0.000000 RG
+451.079865 63.000000 l S
+endstream
+endobj
+16 0 obj
+<< /Length 146 >>stream
+BT /GS0 gs 0.258819 -0.965926 0.965926 0.258819 454.079865 57.000000 Tm /F2 8.000000 Tf 0.000000 0.000000 0.000000 rg 0.000000 Tc (0.003689) Tj ET
+endstream
+endobj
+17 0 obj
+<< /Length 106 >>stream
+1.500000 w
+350.809906 57.000000 m
+/DeviceRGB CS
+0.000000 0.000000 0.000000 RG
+350.809906 63.000000 l S
+endstream
+endobj
+18 0 obj
+<< /Length 146 >>stream
+BT /GS0 gs 0.258819 -0.965926 0.965926 0.258819 353.809906 57.000000 Tm /F2 8.000000 Tf 0.000000 0.000000 0.000000 rg 0.000000 Tc (0.004919) Tj ET
+endstream
+endobj
+19 0 obj
+<< /Length 106 >>stream
+1.500000 w
+250.539932 57.000000 m
+/DeviceRGB CS
+0.000000 0.000000 0.000000 RG
+250.539932 63.000000 l S
+endstream
+endobj
+20 0 obj
+<< /Length 146 >>stream
+BT /GS0 gs 0.258819 -0.965926 0.965926 0.258819 253.539932 57.000000 Tm /F2 8.000000 Tf 0.000000 0.000000 0.000000 rg 0.000000 Tc (0.006149) Tj ET
+endstream
+endobj
+21 0 obj
+<< /Length 106 >>stream
+1.500000 w
+150.269974 57.000000 m
+/DeviceRGB CS
+0.000000 0.000000 0.000000 RG
+150.269974 63.000000 l S
+endstream
+endobj
+22 0 obj
+<< /Length 146 >>stream
+BT /GS0 gs 0.258819 -0.965926 0.965926 0.258819 153.269974 57.000000 Tm /F2 8.000000 Tf 0.000000 0.000000 0.000000 rg 0.000000 Tc (0.007379) Tj ET
+endstream
+endobj
+23 0 obj
+<< /Length 107 >>stream
+1.500000 w
+651.619812 63.000000 m
+/DeviceRGB CS
+0.964706 0.964706 0.964706 RG
+651.619812 555.275574 l S
+endstream
+endobj
+24 0 obj
+<< /Length 107 >>stream
+1.500000 w
+551.349854 63.000000 m
+/DeviceRGB CS
+0.964706 0.964706 0.964706 RG
+551.349854 555.275574 l S
+endstream
+endobj
+25 0 obj
+<< /Length 107 >>stream
+1.500000 w
+451.079865 63.000000 m
+/DeviceRGB CS
+0.964706 0.964706 0.964706 RG
+451.079865 555.275574 l S
+endstream
+endobj
+26 0 obj
+<< /Length 107 >>stream
+1.500000 w
+350.809906 63.000000 m
+/DeviceRGB CS
+0.964706 0.964706 0.964706 RG
+350.809906 555.275574 l S
+endstream
+endobj
+27 0 obj
+<< /Length 107 >>stream
+1.500000 w
+250.539932 63.000000 m
+/DeviceRGB CS
+0.964706 0.964706 0.964706 RG
+250.539932 555.275574 l S
+endstream
+endobj
+28 0 obj
+<< /Length 107 >>stream
+1.500000 w
+150.269974 63.000000 m
+/DeviceRGB CS
+0.964706 0.964706 0.964706 RG
+150.269974 555.275574 l S
+endstream
+endobj
+29 0 obj
+<< /Length 104 >>stream
+BT /GS0 gs 756.889771 75.000000 TD /F2 8.000000 Tf 0.000000 0.000000 0.000000 rg 0.000000 Tc (nai) Tj ET
+endstream
+endobj
+30 0 obj
+<< /Length 105 >>stream
+BT /GS0 gs 756.889771 188.818893 TD /F2 8.000000 Tf 0.000000 0.000000 0.000000 rg 0.000000 Tc (unm) Tj ET
+endstream
+endobj
+31 0 obj
+<< /Length 106 >>stream
+3.000000 w
+751.889771 80.000000 m
+/DeviceRGB CS
+0.000000 0.000000 0.000000 RG
+751.657593 80.000000 l S
+endstream
+endobj
+32 0 obj
+<< /Length 108 >>stream
+3.000000 w
+751.889771 193.818893 m
+/DeviceRGB CS
+0.000000 0.000000 0.000000 RG
+751.657593 193.818893 l S
+endstream
+endobj
+33 0 obj
+<< /Length 107 >>stream
+3.000000 w
+751.657593 80.000000 m
+/DeviceRGB CS
+0.000000 0.000000 0.000000 RG
+751.657593 193.818893 l S
+endstream
+endobj
+34 0 obj
+<< /Length 103 >>stream
+BT /GS0 gs 756.657593 131.909454 TD /F2 8.000000 Tf 0.000000 0.000000 0.000000 rg 0.000000 Tc (9) Tj ET
+endstream
+endobj
+35 0 obj
+<< /Length 105 >>stream
+BT /GS0 gs 756.889771 302.637787 TD /F2 8.000000 Tf 0.000000 0.000000 0.000000 rg 0.000000 Tc (unp) Tj ET
+endstream
+endobj
+36 0 obj
+<< /Length 108 >>stream
+3.000000 w
+751.657593 136.909454 m
+/DeviceRGB CS
+0.000000 0.000000 0.000000 RG
+743.794617 136.909454 l S
+endstream
+endobj
+37 0 obj
+<< /Length 108 >>stream
+3.000000 w
+751.889771 307.637787 m
+/DeviceRGB CS
+0.000000 0.000000 0.000000 RG
+743.794617 307.637787 l S
+endstream
+endobj
+38 0 obj
+<< /Length 108 >>stream
+3.000000 w
+743.794617 136.909454 m
+/DeviceRGB CS
+0.000000 0.000000 0.000000 RG
+743.794617 307.637787 l S
+endstream
+endobj
+39 0 obj
+<< /Length 103 >>stream
+BT /GS0 gs 748.794617 217.273621 TD /F2 8.000000 Tf 0.000000 0.000000 0.000000 rg 0.000000 Tc (8) Tj ET
+endstream
+endobj
+40 0 obj
+<< /Length 105 >>stream
+BT /GS0 gs 756.889771 416.456665 TD /F2 8.000000 Tf 0.000000 0.000000 0.000000 rg 0.000000 Tc (val) Tj ET
+endstream
+endobj
+41 0 obj
+<< /Length 108 >>stream
+3.000000 w
+743.794617 222.273621 m
+/DeviceRGB CS
+0.000000 0.000000 0.000000 RG
+722.047852 222.273621 l S
+endstream
+endobj
+42 0 obj
+<< /Length 108 >>stream
+3.000000 w
+751.889771 421.456665 m
+/DeviceRGB CS
+0.000000 0.000000 0.000000 RG
+722.047852 421.456665 l S
+endstream
+endobj
+43 0 obj
+<< /Length 108 >>stream
+3.000000 w
+722.047852 222.273621 m
+/DeviceRGB CS
+0.000000 0.000000 0.000000 RG
+722.047852 421.456665 l S
+endstream
+endobj
+44 0 obj
+<< /Length 103 >>stream
+BT /GS0 gs 727.047852 316.865143 TD /F2 8.000000 Tf 0.000000 0.000000 0.000000 rg 0.000000 Tc (7) Tj ET
+endstream
+endobj
+45 0 obj
+<< /Length 105 >>stream
+BT /GS0 gs 756.889771 530.275574 TD /F2 8.000000 Tf 0.000000 0.000000 0.000000 rg 0.000000 Tc (mix) Tj ET
+endstream
+endobj
+46 0 obj
+<< /Length 108 >>stream
+3.000000 w
+751.889771 535.275574 m
+/DeviceRGB CS
+0.000000 0.000000 0.000000 RG
+102.416107 535.275574 l S
+endstream
+endobj
+47 0 obj
+<< /Length 108 >>stream
+3.000000 w
+722.047852 321.865143 m
+/DeviceRGB CS
+0.000000 0.000000 0.000000 RG
+102.416107 321.865143 l S
+endstream
+endobj
+48 0 obj
+<< /Length 108 >>stream
+3.000000 w
+102.416107 535.275574 m
+/DeviceRGB CS
+0.000000 0.000000 0.000000 RG
+102.416107 321.865143 l S
+endstream
+endobj
+49 0 obj
+<< /Length 102 >>stream
+BT /GS0 gs 89.416107 423.570374 TD /F2 8.000000 Tf 0.000000 0.000000 0.000000 rg 0.000000 Tc (6) Tj ET
+endstream
+endobj
+50 0 obj
+<< /Length 108 >>stream
+1.000000 w
+751.889771 141.909454 m
+/DeviceRGB CS
+0.000000 0.000000 1.000000 RG
+751.237488 141.909454 l S
+endstream
+endobj
+51 0 obj
+<< /Length 108 >>stream
+1.000000 w
+751.889771 144.909454 m
+/DeviceRGB CS
+0.000000 0.000000 1.000000 RG
+751.889771 144.909454 l S
+endstream
+endobj
+52 0 obj
+<< /Length 108 >>stream
+1.000000 w
+746.101013 227.273621 m
+/DeviceRGB CS
+0.000000 0.000000 1.000000 RG
+741.453735 227.273621 l S
+endstream
+endobj
+53 0 obj
+<< /Length 108 >>stream
+1.000000 w
+746.101013 230.273621 m
+/DeviceRGB CS
+0.000000 0.000000 1.000000 RG
+746.101013 230.273621 l S
+endstream
+endobj
+54 0 obj
+<< /Length 108 >>stream
+1.000000 w
+728.164062 326.865143 m
+/DeviceRGB CS
+0.000000 0.000000 1.000000 RG
+715.934326 326.865143 l S
+endstream
+endobj
+55 0 obj
+<< /Length 108 >>stream
+1.000000 w
+728.164062 329.865143 m
+/DeviceRGB CS
+0.000000 0.000000 1.000000 RG
+728.164062 329.865143 l S
+endstream
+endobj
+56 0 obj
+<< /Length 107 >>stream
+1.000000 w
+141.625275 433.570374 m
+/DeviceRGB CS
+0.000000 0.000000 1.000000 RG
+63.762543 433.570374 l S
+endstream
+endobj
+57 0 obj
+<< /Length 108 >>stream
+1.000000 w
+141.625275 436.570374 m
+/DeviceRGB CS
+0.000000 0.000000 1.000000 RG
+141.625275 436.570374 l S
+endstream
+endobj
+58 0 obj
+<< /Length 145 >>stream
+BT /GS0 gs 0.258819 -0.965926 0.965926 0.258819 53.000000 57.000000 Tm /F2 8.000000 Tf 0.000000 0.000000 0.000000 rg 0.000000 Tc (0.008609) Tj ET
+endstream
+endobj
+59 0 obj
+<< /Length 102 >>stream
+BT /GS0 gs 754.889771 57.000000 TD /F2 8.000000 Tf 0.000000 0.000000 0.000000 rg 0.000000 Tc (0) Tj ET
+endstream
+endobj
+60 0 obj
+<<
+  /Type /Font
+  /Subtype /Type1
+  /BaseFont /Courier-Bold
+  /Encoding /WinAnsiEncoding
+>>
+endobj
+61 0 obj
+<< /Length 122 >>stream
+BT /GS0 gs 5.000000 5.000000 TD /F3 8.000000 Tf 0.000000 0.000000 0.000000 rg 0.000000 Tc (Wed Oct  7 09:45:52 2026) Tj ET
+endstream
+endobj
+62 0 obj
+<< /Length 120 >>stream
+BT /GS0 gs 125.047623 5.000000 TD /F3 8.000000 Tf 0.000000 0.000000 0.000000 rg 0.000000 Tc (bpp --cfile a00.ctl ) Tj ET
+endstream
+endobj
+63 0 obj
+<< /Length 124 >>stream
+BT /GS0 gs 5.000000 580.275574 TD /F3 8.000000 Tf 0.000000 0.000000 0.000000 rg 0.000000 Tc (Created with: bpp v4.8.7) Tj ET
+endstream
+endobj
+64 0 obj
+<< /Length 142 >>stream
+BT /GS0 gs 640.143738 580.275574 TD /F3 8.000000 Tf 0.000000 0.000000 0.000000 rg 0.000000 Tc (a84db12a15c6d7350cc3f9510a6d790972400af1) Tj ET
+endstream
+endobj
+xref
+0 65
+0000000000 65535 f
+0000000017 00000 n
+0000000174 00000 n
+0000000246 00000 n
+0000000305 00000 n
+0000000420 00000 n
+0000001583 00000 n
+0000001696 00000 n
+0000001827 00000 n
+0000001987 00000 n
+0000002146 00000 n
+0000002308 00000 n
+0000002470 00000 n
+0000002672 00000 n
+0000002834 00000 n
+0000003036 00000 n
+0000003198 00000 n
+0000003400 00000 n
+0000003562 00000 n
+0000003764 00000 n
+0000003926 00000 n
+0000004128 00000 n
+0000004290 00000 n
+0000004492 00000 n
+0000004655 00000 n
+0000004818 00000 n
+0000004981 00000 n
+0000005144 00000 n
+0000005307 00000 n
+0000005470 00000 n
+0000005630 00000 n
+0000005791 00000 n
+0000005953 00000 n
+0000006117 00000 n
+0000006280 00000 n
+0000006439 00000 n
+0000006600 00000 n
+0000006764 00000 n
+0000006928 00000 n
+0000007092 00000 n
+0000007251 00000 n
+0000007412 00000 n
+0000007576 00000 n
+0000007740 00000 n
+0000007904 00000 n
+0000008063 00000 n
+0000008224 00000 n
+0000008388 00000 n
+0000008552 00000 n
+0000008716 00000 n
+0000008874 00000 n
+0000009038 00000 n
+0000009202 00000 n
+0000009366 00000 n
+0000009530 00000 n
+0000009694 00000 n
+0000009858 00000 n
+0000010021 00000 n
+0000010185 00000 n
+0000010386 00000 n
+0000010544 00000 n
+0000010661 00000 n
+0000010839 00000 n
+0000011015 00000 n
+0000011195 00000 n
+trailer
+<<
+/Size 65
+/Root 3 0 R
+/Info 1 0 R
+/ID [<836b1297a6e160b0> <001aeb0b4a1891d9>]
+>>
+startxref
+11393
+%%EOF

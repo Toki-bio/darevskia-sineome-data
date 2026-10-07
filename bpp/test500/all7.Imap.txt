@@ -1,0 +1,7 @@
+arm	arm
+dva	val
+dvl	val
+mix	mix
+nai	nai
+unm	unm
+unp	unp
