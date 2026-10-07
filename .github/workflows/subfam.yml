@@ -1,0 +1,82 @@
+name: SubFam on a stratified sample of dar_squam1 copies (7 assemblies)
+# sample (equal number per assembly, seed 11) -> SubFam.sh (batches of 50, unchanged) -> chunk table, chunk alignments,
+# SubFam input alignment with dar_squam1 -> subfam/dar_squam1_<total>/index.html (style of the Tal SINE reports)
+# started by a push that changes subfam/request.txt (one line: number of copies), or by hand
+on:
+  push:
+    branches: [subfam]
+    paths: ['subfam/request.txt']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  subfam:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+      - name: tools
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL || true
+          sudo apt-get update -q && sudo apt-get install -y -q mafft emboss samtools seqkit pigz > /dev/null
+          echo /usr/lib/emboss >> $GITHUB_PATH          # Ubuntu installs EMBOSS cons as em_cons; SubFam calls cons
+          git clone -q https://github.com/Toki-bio/SubFam subfamtool
+          echo "SUBFAM_COMMIT=$(git -C subfamtool rev-parse --short HEAD)" >> $GITHUB_ENV
+          mafft --version 2>&1 | head -1; /usr/lib/emboss/cons -version 2>&1 | head -1; seqkit version
+      - name: sample copies
+        run: |
+          TOTAL=$(tr -dc 0-9 < subfam/request.txt); echo "TOTAL=$TOTAL" >> $GITHUB_ENV
+          D=subfam/dar_squam1_$TOTAL; mkdir -p $D g; echo "D=$D" >> $GITHUB_ENV
+          args=(); for sp in dva dvl nai mix arm unp unm; do args+=($sp=old/beds/$sp-dar_squam1.bed.gz); done
+          python3 subfam/sample_copies.py --total $TOTAL --seed 11 --bed "${args[@]}" -o $D/sample.tsv | tee g/sample.log
+          zcat dva-mix-v2/alignments/aln_dva-mix_SINE.aln.gz |
+            awk '/^>dar_squam1/{getline; gsub(/-/,""); print ">dar_squam1\n" toupper($0); exit}' > g/dar_squam1.fa
+          : > g/sample.fa
+          while read sp acc; do
+            dir=https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/${acc:4:3}/${acc:7:3}/${acc:10:3}
+            name=$(curl -sSfL --retry 8 --retry-all-errors "$dir/" | grep -o "${acc}_[^/\"<]*" | head -1)
+            curl -sSfL --retry 8 --retry-all-errors "$dir/$name/${name}_genomic.fna.gz" | pigz -dc |
+              awk '/^>/{print $1; next} {print}' > g/genome.fa
+            samtools faidx g/genome.fa
+            python3 subfam/extract.py $D/sample.tsv $sp g/genome.fa >> g/sample.fa
+            echo "$sp $name: $(grep -c '>' g/sample.fa) sequences so far"; rm -f g/genome.fa g/genome.fa.fai
+          done <<'LIST'
+          dva GCA_034642135.1
+          dvl GCA_024498535.1
+          nai GCA_034642065.1
+          mix GCA_034641385.1
+          arm GCA_034641395.1
+          unp GCA_032766555.1
+          unm GCA_032766585.1
+          LIST
+          [ "$(grep -c '>' g/sample.fa)" = "$TOTAL" ]
+      - name: SubFam and tables
+        run: |
+          ( time SUBFAM=$PWD/subfamtool/SubFam.sh bash subfam/run_subfam.sh g/sample.fa g/dar_squam1.fa $D 50 ) 2>&1 | tail -6
+      - name: page
+        run: |
+          printf 'dva\tDarevskia valentini\tDar_val_2.0 (GCA_034642135.1)\ndvl\tDarevskia valentini\tDval_245 (GCA_024498535.1)\nnai\tDarevskia nairensis\tDar_nair_1.0 (GCA_034642065.1)\nmix\tDarevskia mixta\tDar_mix_1.0 (GCA_034641385.1)\narm\tDarevskia armeniaca\tDar_arm_1.0 (GCA_034641395.1)\nunp\tDarevskia unisexualis, paternal haplotype\tD.uni.pHiFi.1.0 (GCA_032766555.1)\nunm\tDarevskia unisexualis, maternal haplotype\tD.uni.mHiFi.1.0 (GCA_032766585.1)\n' > g/names.tsv
+          pigz -c g/sample.fa > $D/sample_$TOTAL.fa.gz
+          {
+            printf 'subtitle\tSubFam chunk consensi of %s dar_squam1 copies sampled from 7 Darevskia assemblies, for peeling into subfamilies\n' "$TOTAL"
+            printf 'sample_file\tsample_%s.fa.gz\n' "$TOTAL"
+            printf 'sample\t%s copies, the same number from each assembly (old/beds/<sp>-dar_squam1.bed.gz; Python random, seed 11); dva and dvl are both D. valentini\n' "$TOTAL"
+            printf 'SubFam\tgithub.com/Toki-bio/SubFam %s, SubFam.sh unchanged, batches of 50\n' "$SUBFAM_COMMIT"
+            printf 'reference\tdar_squam1 consensus (357 bp)\n'
+            printf 'tools\t%s; %s\n' "$(mafft --version 2>&1 | head -1)" "$(cons -version 2>&1 | head -1)"
+            printf 'run\tgithub.com/%s/actions/runs/%s\n' "${{ github.repository }}" "${{ github.run_id }}"
+          } > g/meta.tsv
+          python3 subfam/make_page.py --chunks $D/chunks.tsv --copies $D/chunks.copies.tsv --species dva,dvl,nai,mix,arm,unp,unm \
+            --names g/names.tsv --meta g/meta.tsv --outdir $D --title "dar_squam1 SubFam ($TOTAL copies)" \
+            --raw-base "https://raw.githubusercontent.com/${{ github.repository }}/subfam/$D"
+          cp $D/run/sample.msf $D/subfam.msf; cp $D/run/subfam.log $D/; rm -rf $D/run
+          du -sh $D; ls $D | head
+      - name: commit
+        run: |
+          git config user.name "github-actions[bot]"; git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add $D && git commit -q -m "SubFam on $TOTAL dar_squam1 copies from 7 assemblies (run ${{ github.run_id }})"
+          for i in 1 2 3; do git pull -q --rebase origin subfam && git push -q origin HEAD:subfam && exit 0; sleep 10; done
+          exit 1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: 'subfam-${{ env.TOTAL }}', path: 'subfam/dar_squam1_*/', retention-days: 30}
