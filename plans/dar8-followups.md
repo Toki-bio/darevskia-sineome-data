@@ -179,6 +179,28 @@ for the next.
    in sineclose) rather than reassembly. Decide after 6.1, which may already explain most of them.
 - Result: M → P/A where evidence is sufficient, otherwise kept M with a reason; dar8.2.
 
+## 7. BPP: divergence times, the age of the parthenogens, and an ILS null model for SINE patterns
+
+BPP 4.8.7 (Flouri, Rannala, Yang; github.com/bpp/bpp): multispecies coalescent with introgression (MSC-I) and
+migration (MSC-M), species-tree inference, unphased diploid data.
+- Loci: the flanks of orthologous SINE insertions, left + right 250 bp with the SINE removed, from dar8 groups that are
+  single unflagged copies in all seven genomes (10,540 candidates), ≥ 200 kb apart on unm (`bpp/bpp_loci.py`). Up to
+  ~5,000 unlinked loci at that spacing. After the haplotig collapse (item 1), groups in haplotig blocks are excluded.
+- Questions: (1) species tree and divergence times of valentini (dva + dvl = two individuals), nairensis, mixta;
+  (2) age of the parthenogens: unp and unm (haplotype assemblies) as samples beside their parental species, the
+  split time bounds the hybridisation; arm only once phased (haplotigs, reads); (3) the expected rate of SINE patterns
+  that conflict with the species tree through incomplete lineage sorting, from the estimated θ and τ, against the
+  observed conflicting patterns (excess = introgression, homoplasy or calling error); τ also turns lineage-specific
+  insertion counts into SINE activity per time; (4) gene flow between parthenogens and parental species (MSC-M/MSC-I).
+- Limits: one sequence per species gives no tip θ (the reads next week fix that: several individuals as unphased
+  diploids); loci ≤ 500 bp to keep recombination inside a locus low; MSC-I/MSC-M and species-tree runs on thousands of
+  loci need Monsoon.
+- Gates: toy = BPP's own simulation, 5 species, 1,000 loci × 500 bp: every τ and θ inside its 95 % HPD except the
+  youngest split (val–unp, true 0.0002, estimated 0.00007) — very young splits from one sequence per species are
+  weak; partial = 500 real loci on a cloud runner (A01 species tree, then A00 on its best tree; running now);
+  full = after the subfamilies: ~3,000–5,000 loci, A00/A01 in the cloud if they fit 6 h, MSC-I with arm and the
+  parthenogen–parent models on Monsoon.
+
 ---
 
 ## What I need from you
