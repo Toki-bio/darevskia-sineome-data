@@ -1,0 +1,563 @@
+!!NA_MULTIPLE_ALIGNMENT 1.0
+
+  stdout MSF: 398 Type: N 07/10/26 CompCheck: 8263 ..
+
+  Name: sample_001.bnk Len: 398  Check: 8804 Weight: 1.00
+  Name: sample_002.bnk Len: 398  Check: 8780 Weight: 1.00
+  Name: sample_005.bnk Len: 398  Check: 8908 Weight: 1.00
+  Name: sample_008.bnk Len: 398  Check: 9781 Weight: 1.00
+  Name: sample_003.bnk Len: 398  Check: 8573 Weight: 1.00
+  Name: sample_007.bnk Len: 398  Check: 8628 Weight: 1.00
+  Name: sample_004.bnk Len: 398  Check: 8786 Weight: 1.00
+  Name: sample_006.bnk Len: 398  Check: 1417 Weight: 1.00
+  Name: sample_009.bnk Len: 398  Check: 2227 Weight: 1.00
+  Name: sample_010.bnk Len: 398  Check: 2514 Weight: 1.00
+  Name: sample_011.bnk Len: 398  Check: 5929 Weight: 1.00
+  Name: sample_014.bnk Len: 398  Check: 5929 Weight: 1.00
+  Name: sample_017.bnk Len: 398  Check: 5929 Weight: 1.00
+  Name: sample_020.bnk Len: 398  Check: 5929 Weight: 1.00
+  Name: sample_012.bnk Len: 398  Check: 5096 Weight: 1.00
+  Name: sample_015.bnk Len: 398  Check: 5096 Weight: 1.00
+  Name: sample_016.bnk Len: 398  Check: 5096 Weight: 1.00
+  Name: sample_013.bnk Len: 398  Check: 5045 Weight: 1.00
+  Name: sample_019.bnk Len: 398  Check: 6433 Weight: 1.00
+  Name: sample_018.bnk Len: 398  Check: 7810 Weight: 1.00
+  Name: sample_021.bnk Len: 398  Check: 9631 Weight: 1.00
+  Name: sample_022.bnk Len: 398  Check: 7321 Weight: 1.00
+  Name: sample_023.bnk Len: 398  Check: 1158 Weight: 1.00
+  Name: sample_024.bnk Len: 398  Check: 8609 Weight: 1.00
+  Name: sample_026.bnk Len: 398  Check: 8851 Weight: 1.00
+  Name: sample_030.bnk Len: 398  Check: 8069 Weight: 1.00
+  Name: sample_025.bnk Len: 398  Check: 8810 Weight: 1.00
+  Name: sample_031.bnk Len: 398  Check: 6500 Weight: 1.00
+  Name: sample_028.bnk Len: 398  Check: 6578 Weight: 1.00
+  Name: sample_029.bnk Len: 398  Check: 6578 Weight: 1.00
+  Name: sample_038.bnk Len: 398  Check: 6578 Weight: 1.00
+  Name: sample_050.bnk Len: 398  Check: 6578 Weight: 1.00
+  Name: sample_056.bnk Len: 398  Check: 8888 Weight: 1.00
+  Name: sample_033.bnk Len: 398  Check: 6776 Weight: 1.00
+  Name: sample_047.bnk Len: 398  Check: 6776 Weight: 1.00
+  Name: sample_034.bnk Len: 398  Check: 9697 Weight: 1.00
+  Name: sample_048.bnk Len: 398  Check: 7520 Weight: 1.00
+  Name: sample_039.bnk Len: 398  Check: 8680 Weight: 1.00
+  Name: sample_046.bnk Len: 398  Check: 3277 Weight: 1.00
+  Name: sample_036.bnk Len: 398  Check:   83 Weight: 1.00
+  Name: sample_055.bnk Len: 398  Check: 5583 Weight: 1.00
+  Name: sample_041.bnk Len: 398  Check: 5375 Weight: 1.00
+  Name: sample_040.bnk Len: 398  Check: 8252 Weight: 1.00
+  Name: sample_027.bnk Len: 398  Check: 6115 Weight: 1.00
+  Name: sample_032.bnk Len: 398  Check: 6139 Weight: 1.00
+  Name: sample_049.bnk Len: 398  Check: 3117 Weight: 1.00
+  Name: sample_035.bnk Len: 398  Check: 8275 Weight: 1.00
+  Name: sample_037.bnk Len: 398  Check: 8218 Weight: 1.00
+  Name: sample_059.bnk Len: 398  Check: 1987 Weight: 1.00
+  Name: sample_044.bnk Len: 398  Check: 7500 Weight: 1.00
+  Name: sample_052.bnk Len: 398  Check: 3232 Weight: 1.00
+  Name: sample_057.bnk Len: 398  Check: 7647 Weight: 1.00
+  Name: sample_051.bnk Len: 398  Check: 7950 Weight: 1.00
+  Name: sample_045.bnk Len: 398  Check: 9354 Weight: 1.00
+  Name: sample_043.bnk Len: 398  Check: 7644 Weight: 1.00
+  Name: sample_053.bnk Len: 398  Check: 3128 Weight: 1.00
+  Name: sample_054.bnk Len: 398  Check: 9736 Weight: 1.00
+  Name: sample_058.bnk Len: 398  Check: 2882 Weight: 1.00
+  Name: sample_060.bnk Len: 398  Check: 1105 Weight: 1.00
+  Name: sample_042.bnk Len: 398  Check: 1356 Weight: 1.00
+
+//
+
+           1                                               50
+sample_001.bnk ~gggagcgggtggcgctgtggtctaaaccactgagcctcttgggcttgcc
+sample_002.bnk ~gggaccgggtggcgctgtggtctaaaccactgagcctcttgggcttgcc
+sample_005.bnk ~~gggacgggtggcgctgtggtctaaaccactgagcctcttgggcttgcc
+sample_008.bnk ~gggaccgggtggcgctgtggtctaaaccactgagcctcttgggcttgcc
+sample_003.bnk gggacgcgggtggcgctgtggtctaaaccactgagcctcttgggcttgcc
+sample_007.bnk ~ggacgcgggtggcgctgtggtctaaaccactgagcctcttgggcttgcc
+sample_004.bnk gggacgcgggtggcgctgtggtctaaaccactgagcctcttgggcttgcc
+sample_006.bnk gggacgcgggtggcgctgtggtctaaaccactgagcctcttgggcttgcc
+sample_009.bnk ~~ggagcgggtggcgctgtggtctaaaccactgagcctcttgggcttgct
+sample_010.bnk ~gggaccaggtggcgctgtggtctaaaccacagagccccttgggcttgct
+sample_011.bnk gggacccaggtggcgctgtgggttaaaccacagagc..ctagggcttgct
+sample_014.bnk gggacccaggtggcgctgtgggttaaaccacagagc..ctagggcttgct
+sample_017.bnk gggacccaggtggcgctgtgggttaaaccacagagc..ctagggcttgct
+sample_020.bnk gggacccaggtggcgctgtgggttaaaccacagagc..ctagggcttgct
+sample_012.bnk gggacccaggtggcgctgtgggttaaaccacagagc..ctagggcttgct
+sample_015.bnk gggacccaggtggcgctgtgggttaaaccacagagc..ctagggcttgct
+sample_016.bnk gggacccaggtggcgctgtgggttaaaccacagagc..ctagggcttgct
+sample_013.bnk gggacccaggtggcgctgtgggttaaaccacagagc..ctagggcttgct
+sample_019.bnk gggacccaggtggcgctgtgggttaaaccacagagc..ctagggcttgct
+sample_018.bnk gggacccaggtggcgctgtgggttaaaccacagagc..ctagggcttgct
+sample_021.bnk gggacccaggtggcgctgtgggttaaaccacagagc..ctagggcttgct
+sample_022.bnk gggacccaggtggcgctgtgggttaaaccacagagc..ctagggcttgct
+sample_023.bnk gggacccaggtggcgctgtgggttaaaccacagagc..ctagggcttgct
+sample_024.bnk gggacgcgggtggcgctgtgggttaaaccacagagc..ctagggcttgcc
+sample_026.bnk gggacgcgggtggcgctgtgggttaaaccacagagc..ctagggcttgcc
+sample_030.bnk gggacgcgggtggcgctgtgggttaaaccacagagc..ctagggcttgcc
+sample_025.bnk gggacgcgggtggcgctgtgggttaaaccacagagc..ctagggcttgcc
+sample_031.bnk gggacgcgggtggcgctgtgggttaaaccacagagc..ctagggcttgcc
+sample_028.bnk gggacgcgggtggcgctgtgggttaaaccacagagc..ctagggcttgcc
+sample_029.bnk gggacgcgggtggcgctgtgggttaaaccacagagc..ctagggcttgcc
+sample_038.bnk gggacgcgggtggcgctgtgggttaaaccacagagc..ctagggcttgcc
+sample_050.bnk gggacgcgggtggcgctgtgggttaaaccacagagc..ctagggcttgcc
+sample_056.bnk gggacgcgggtggcgctgtgggttaaaccacagagc..ctagggcttgcc
+sample_033.bnk gggacgcgggtggcgctgtgggttaaaccacagagc..ctagggcttgcc
+sample_047.bnk gggacgcgggtggcgctgtgggttaaaccacagagc..ctagggcttgcc
+sample_034.bnk gggacgcgggtggcgctgtgggttaaaccacagagc..ctagggcttgcc
+sample_048.bnk gggacgcgggtggcgctgtgggttaaaccacagagc..ctagggcttgcc
+sample_039.bnk gggacgcgggtggcgctgtgggttaaaccacagagc..ctagggcttgcc
+sample_046.bnk gggacgcgggtggcgctgtggtctaaaccacagagc..ctagggcttgcc
+sample_036.bnk gggacgcgggtggcgctgtgggttaaaccacagagc..ctagggcttgcc
+sample_055.bnk gggacgcgggtggcgctgtgggttaaaccacagagc..ctagggcttgcc
+sample_041.bnk gggacgcgggtggcgctgtgggttaaaccacagagc..ctagggcttgcc
+sample_040.bnk gggacgcgggtggcgctgtgggttaaaccacagagc..ctagggcttgct
+sample_027.bnk gggacgcgggtggcgctgtgggttaaaccacagagc..ctagggcttgcc
+sample_032.bnk gggacgcgggtggcgctgtgggttaaaccacagagc..ctagggcttgcc
+sample_049.bnk gggacgcgggtggcgctgtgggttaaaccacagagc..ctagggcttgcc
+sample_035.bnk gggacgcgggtggcgctgtgggttaaaccacagagc..ctagggcttgcc
+sample_037.bnk gggacgcgggtggcgctgtggtctaaaccacagagc..ctagggcttgcc
+sample_059.bnk gggacgcgggtggcgctgtggtctaaaccacagagc..ctagggcttgcc
+sample_044.bnk gggacgcgggtggcgctgtggtctaaaccacagagc..ctagggcttgcc
+sample_052.bnk gggacgcgggtggcgctgtggtctaaaccacagagc..ctagggcttgcc
+sample_057.bnk gggacgcgggtggcgctgtggtctaaaccacagagc..ctagggcttgcc
+sample_051.bnk gggacgcgggtggcgctgtggtctaaaccacagagc..ctagggcttgcc
+sample_045.bnk gggacgcgggtggcgctgtgggttaaaccacagagc..ctagggcttgcc
+sample_043.bnk ~gggaccaggtggcgctgtgggttaaaccacagagc..ctagggcttgcc
+sample_053.bnk gggacgcgggtggcgctgtggtctaaaccactgagcctcttgggcttgcc
+sample_054.bnk gggacgcgggtggcgctgtggtctaaaccactgagc..ctagggcttgcc
+sample_058.bnk gggacgcgggtggcgctgtggtctaaaccactgagc..ctagggcttgcc
+sample_060.bnk gggacgcgggtggcgctgtggtctaaaccactgagcc.cttgggcttgcc
+sample_042.bnk ~gggaccaggtggcgctgtgggttaaaccaca..........ggcttgct
+
+           51                                             100
+sample_001.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_002.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_005.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_008.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_003.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_007.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_004.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_006.bnk gatcggaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_009.bnk gatcggaaggtcggcggttcgaat.cccgcgacggggtgagctcccgttg
+sample_010.bnk gatcagaaggtcggcggttcgaatccctgcgacggggtgagctcccgttg
+sample_011.bnk gatcagaaggtcggcggttcgaatccctgcgacggggtgagctcccgttg
+sample_014.bnk gatcagaaggtcggcggttcgaatccctgcgacggggtgagctcccgttg
+sample_017.bnk gatcagaaggtcggcggttcgaatccctgcgacggggtgagctcccgttg
+sample_020.bnk gatcagaaggtcggcggttcgaatccctgcgacggggtgagctcccgttg
+sample_012.bnk gatcagaaggtcggcggttcgaatccctgcgacggggtgagctcccgttg
+sample_015.bnk gatcagaaggtcggcggttcgaatccctgcgacggggtgagctcccgttg
+sample_016.bnk gatcagaaggtcggcggttcgaatccctgcgacggggtgagctcccgttg
+sample_013.bnk gatcagaaggtcggcggttcgaatccctgcgacggggtgagctcccgttg
+sample_019.bnk gatcagaaggtcggcggttcgaatccctgcgacggggtgagctcccgttg
+sample_018.bnk gatcagaaggtcggcggttcgaatccctgcgacggggtgagctcccgttg
+sample_021.bnk gatcagaaggtcggcggttcgaatccctgcgacggggtgagctcccgttg
+sample_022.bnk gatcagaaggtcggcggttcgaatccctgcgacggggtgagctcccgttg
+sample_023.bnk gatcagaaggtcggcggttcgaatccctgcgacggggtgagctcccgttg
+sample_024.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_026.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_030.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_025.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_031.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_028.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_029.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_038.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_050.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_056.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_033.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_047.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_034.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_048.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_039.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_046.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_036.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_055.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_041.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_040.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_027.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_032.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_049.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_035.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_037.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_059.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_044.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_052.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_057.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_051.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_045.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_043.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_053.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_054.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_058.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_060.bnk gatcagaaggtcggcggttcgaatccccgcgacggggtgagctcccgttg
+sample_042.bnk gatcagaaggtcagcggttcgaatccctgcgacggggtgagctcccgttg
+
+           101                                            150
+sample_001.bnk ctctgtcccagctcctgccaacctagcagttcgaaagcacgcc..agtgc
+sample_002.bnk ctctgtcccagctcctgccaacctagcagttcgaaagcacgcc..agtgc
+sample_005.bnk ctctgtcccagctcctgccaacctagcagttcgaaagcacgcc..agtgc
+sample_008.bnk ctctgtcccagctcctgccaacctagcagttcgaaagcacgcc..agtgc
+sample_003.bnk ctctgtcccagctcctgccaacctagcagttcgaaagcacacc..agtgc
+sample_007.bnk ctctgtcccagctcctgccaacctagcagttcgaaagcacacc..agtgc
+sample_004.bnk ctctgtcccagctcctgccaacctagcagttcgaaagcacgcc..agtgc
+sample_006.bnk ctctgtcccagctcctgccaacctagcagttcgaaagcacgcc..agtgc
+sample_009.bnk ctctgtcccagctcctgccaacctagcagttcgaaagcacacc..agtgc
+sample_010.bnk ctctgtcccagctcctgccaacctagcagttcgaaagcacgccaaagtgc
+sample_011.bnk ctcggtcccagctcctgcccacctagcagttcgaaagcacgtcaaagtgc
+sample_014.bnk ctcggtcccagctcctgcccacctagcagttcgaaagcacgtcaaagtgc
+sample_017.bnk ctcggtcccagctcctgcccacctagcagttcgaaagcacgtcaaagtgc
+sample_020.bnk ctcggtcccagctcctgcccacctagcagttcgaaagcacgtcaaagtgc
+sample_012.bnk ctcggtcccagctcctgcccacctagcagttcgaaagcacgtcaaagtgc
+sample_015.bnk ctcggtcccagctcctgcccacctagcagttcgaaagcacgtcaaagtgc
+sample_016.bnk ctcggtcccagctcctgcccacctagcagttcgaaagcacgtcaaagtgc
+sample_013.bnk ctcggtcccagctcctgcccacctagcagttcgaaagcacgtcaaagtgc
+sample_019.bnk ctcggtcccagctcctgcccacctagcagttcgaaagcacgtcaaagtgc
+sample_018.bnk ctcggtcccagctcctgcccacctagcagttcgaaagcacgtcaaagtgc
+sample_021.bnk ctcggtcccagctcctgcccacctagcagttcgaaagcacgtcaaagtgc
+sample_022.bnk ctcggtcccagctcctgcccacctagcagttcgaaagcacgtcaaagtgc
+sample_023.bnk ctcggtccctgctcctgccaacctagcagttcgaaagcacgtcaaagtgc
+sample_024.bnk ctcggtccctgctcctgccaacctagcagttcgaaagcacgtcaaagtgc
+sample_026.bnk cttggtccctgctcctgccaacctagcagttcgaaagcacgtcaaagtgc
+sample_030.bnk ctcggtccctgctcctgccaacctagcagttcgaaagcacgtcaaagtgc
+sample_025.bnk ctcggtccctgctcctgccaacctagcagttcgaaagcacgtcaaagtgc
+sample_031.bnk ctcggtccctgctcctgccaacctagcagttcgaaagcacgtcaaagtgc
+sample_028.bnk ctcggtccctgctcctgccaacctagcagttcgaaagcacgtcaaagtgc
+sample_029.bnk ctcggtccctgctcctgccaacctagcagttcgaaagcacgtcaaagtgc
+sample_038.bnk ctcggtccctgctcctgccaacctagcagttcgaaagcacgtcaaagtgc
+sample_050.bnk ctcggtccctgctcctgccaacctagcagttcgaaagcacgtcaaagtgc
+sample_056.bnk ctcggtccctgctcctgccaacctagcagttcgaaagcacgtcaaagtgc
+sample_033.bnk ctcggtccctgctcctgccaacctagcagttcgaaagcacgtcaaagtgc
+sample_047.bnk ctcggtccctgctcctgccaacctagcagttcgaaagcacgtcaaagtgc
+sample_034.bnk ctcggtccctgctcctgccaacctagcagttcgaaagcacgtcaaagtgc
+sample_048.bnk ctcggtccctgctcctgccaacctagcagttcgaaagcacgtcaaagtgc
+sample_039.bnk ctcggtccctgctcctgccaacctagcagttcgaaagcacgtcaaagtgc
+sample_046.bnk ctcggtccctgctcctgccaacctagcagttcgaaagcacgtcaaagtgc
+sample_036.bnk ctcggtcccagctcctgcccacctagcagttcgaaagcacgtcaaagtgc
+sample_055.bnk ctcggtcccagctcctgcccacctagcagttcgaaagcacgtcaaagtgc
+sample_041.bnk ctcggtcccagctcctgcccacctagcagttcgaaagcacgtcaaagtgc
+sample_040.bnk ctcggtccctgctcctgcccacctagcagttcgaaagcacgtcaaagtgc
+sample_027.bnk ctcggtccctgctcctgccaacctagcagttcgaaagcacgtcaaagtgc
+sample_032.bnk ctcggtccctgctcctgccaacctagcagttcgaaagcacgtcaaagtgc
+sample_049.bnk ctcggtccctgctcctgccaacctagcagttcgaaagcacgtcaaagtgc
+sample_035.bnk ctcggtcccagctcctgccaacctagcagttcgaaagcacgtcaaagtgc
+sample_037.bnk ctcggtccctgctcctgccaacctagcagttcgaaagcacgtcaaagtgc
+sample_059.bnk ctcggtcccagctcctgccaacctagcagttcgaaagcacgtcaaagtgc
+sample_044.bnk ctcggtcccagctcctgccaacctagcagttcgaaagcacgtcaaagtgc
+sample_052.bnk ctcggtccctgctcctgccaacctagcagttcgaaagcacgtcaaagtgc
+sample_057.bnk ctcggtcccagctcctgccaacctagcagttcgaaagcacgtcaaagtgc
+sample_051.bnk ctcggtccctgctcctgccaacctagcagttcgaaagcacgtcaaagtgc
+sample_045.bnk ctcggtcccagctcctgccaacctagcagttcgaaagcacgtcaaagtgc
+sample_043.bnk ctcggtcccagctcctgcccacctagcagttcgaaagcacgtcaaagtgc
+sample_053.bnk ctcggtcccagctcctgccaacctagcagttcgaaagcacgtcaaagtgc
+sample_054.bnk ctcggtcccagctcctgccaacctagcagttcgaaagcacgtcaaagtgc
+sample_058.bnk ctcggtcccagctcctgccaacctagcagttcgaaagcacgtcaaagtgc
+sample_060.bnk ctcggtcccagctcctgccaacctagcagttcgaaagcacgtcaaagtgc
+sample_042.bnk ctcggtcccagctcctgcccacctagcagttcgaaagcacgttaaagtgc
+
+           151                                            200
+sample_001.bnk aagtagataaataggtaccgctgcggcgggaaggtaaacggcgtttccgt
+sample_002.bnk aagtagataaataggtaccgctgcggcgggaaggtaaacggcgtttccgt
+sample_005.bnk aagtagataaataggtaccgctgcggcgggaaggtaaacggcgtttccgt
+sample_008.bnk aagtagataaataggtaccgctgtggcgggaaggtaaacggcgtttccgt
+sample_003.bnk aagtagataaataggtaccgctgcggcgggaaggtaaacggcgtttccgt
+sample_007.bnk aagtagataaataggtaccgctgcggcgggaaggtaaacggcgtttccgt
+sample_004.bnk aagtagataaataggtaccgctgtggcgggaaggtaaacggcgtttccgt
+sample_006.bnk aagtagataaataggtaccgctgcggcgggaaggtaaacggcgtttccgt
+sample_009.bnk aagtagataaataggtaccgctgcggcgggaaggtaaacggcgtttccgt
+sample_010.bnk aagtagataaataggtaccgctgtggcgggaaggtaaacggcgtttccgt
+sample_011.bnk aagtagataaataggaaccgctctggcgggaaggtaaacggcgtttccgt
+sample_014.bnk aagtagataaataggaaccgctctggcgggaaggtaaacggcgtttccgt
+sample_017.bnk aagtagataaataggaaccgctctggcgggaaggtaaacggcgtttccgt
+sample_020.bnk aagtagataaataggaaccgctctggcgggaaggtaaacggcgtttccgt
+sample_012.bnk aagtagataaataggaaccgctctggcgggaaggtaaacggcgtttccgt
+sample_015.bnk aagtagataaataggaaccgctctggcgggaaggtaaacggcgtttccgt
+sample_016.bnk aagtagataaataggaaccgctctggcgggaaggtaaacggcgtttccgt
+sample_013.bnk aagtagataaataggaaccgctccggcgggaaggtaaacggcgtttccgt
+sample_019.bnk aagtagataaataggaaccgctctggcgggaaggtaaacggcgtttccgt
+sample_018.bnk aagtagataaataggaaccgctccggcgggaaggtaaacggcgtttccgt
+sample_021.bnk aagtagataaataggtaccgctccggcgggaaggtaaacggcgtttccgt
+sample_022.bnk aagtagataaataggtaccgctccggcgggaaggtaaacggcgtttccgt
+sample_023.bnk aagtagataaataggtaccgctccggcgggaaggtaaacggcgtttccgt
+sample_024.bnk aagtagataaataggtaccgctgcagcgggaaggtaaacggcgtttccgt
+sample_026.bnk aagtagataaataggtaccgctccagcgggaaggtaaacggcgtttccgt
+sample_030.bnk aagtagataaataggtaccgctccagcgggaaggtaaacggcgtttccgt
+sample_025.bnk aagtagataaataggtaccgctccggcgggaaggtaaacggcgtttccgt
+sample_031.bnk aagtagataaataggtaccgctccggcgggaaggtaaacggcgtttccgt
+sample_028.bnk aagtagataaataggtaccgctccggcgggaaggtaaacggcgtttccgt
+sample_029.bnk aagtagataaataggtaccgctccggcgggaaggtaaacggcgtttccgt
+sample_038.bnk aagtagataaataggtaccgctccggcgggaaggtaaacggcgtttccgt
+sample_050.bnk aagtagataaataggtaccgctccggcgggaaggtaaacggcgtttccgt
+sample_056.bnk aagtagataaataggtaccgctccggcgggaaggtaaacggcgtttccgt
+sample_033.bnk aagtagataaataggtaccgctccggcgggaaggtaaacggcgtttccgt
+sample_047.bnk aagtagataaataggtaccgctccggcgggaaggtaaacggcgtttccgt
+sample_034.bnk aagtagataaataggtaccgctccagcgggaaggtaaacggcgtttccgt
+sample_048.bnk aagtagataaataggtaccgctccggcgggaaggtaaacggcgtttccgt
+sample_039.bnk aagtagataaataggtaccgctccggcgggaaggtaaacggcgtttccgt
+sample_046.bnk aagtagataaataggtaccgctccggcgggaaggtaaacggcgtttccgt
+sample_036.bnk aagtagataaataggtaccgctccggcgggaaggtaaacggcgtttccgt
+sample_055.bnk aagtagataaataggtaccgctccggcgggaaggtaaacggcgtttccgt
+sample_041.bnk aagtagataaataggtaccgctccggcgggaaggtaaacggcgtttccgt
+sample_040.bnk aagtagataaataggtaccgctccggcgggaaggtaaacggcgtttccgt
+sample_027.bnk aagtagataaataggtaccgctccagcgggaaggtaaacggcgtttccgt
+sample_032.bnk aagtagataaataggtaccgctccggcgggaaggtaaacggcgtttccgt
+sample_049.bnk aagtagataaataggtaccgctccagcgggaaggtaaacggcgtttccgt
+sample_035.bnk aagtagataaataggtaccgctccggcgggaaggtaaacggcgtttccgt
+sample_037.bnk aagtagataaataggtaccgctccggcgggaaggtaaacggcgtttccgt
+sample_059.bnk aagtagataaataggtaccgctccggcgggaaggtaaacggcgtttccgt
+sample_044.bnk aagtagataaataggtaccgctccggcgggaaggtaaacggcgtttccgt
+sample_052.bnk aagtagataaataggtaccgctccggcgggaaggtaaacggcgtttccgt
+sample_057.bnk aagtagataaataggtaccgctccggcgggaaggtaaacggcgtttccgt
+sample_051.bnk aagtagataaataggtaccgctccggcgggaaggtaaacggcgtttccgt
+sample_045.bnk aagtagataaataggtaccgctccggcgggaaggtaaacggcgtttccgt
+sample_043.bnk aagtagataaataggtaccgctccggcgggaaggtaaacggcgtttccgt
+sample_053.bnk aagtagataaataggtaccgctccggcgggaaggtaaacggcgtttccgt
+sample_054.bnk aagtagataaataggtaccgctccggcgggaaggtaaacggcgtttccgt
+sample_058.bnk aagtagataaataggtaccgctccggcgggaaggtaaacggcgtttccgt
+sample_060.bnk aagtagataaataggtaccgctccggcgggaaggtaaacggcgtttccgt
+sample_042.bnk aagtagataaatagggaccgctccagcgggaaggtaaacggcgtttccgt
+
+           201                                            250
+sample_001.bnk gcgctctggtttccgtcacggtgttccgttg.........cgccagaagc
+sample_002.bnk gcgctctggtttccgtcacggtgttccgttg.........cgccagaagc
+sample_005.bnk gcgctctggtttccgtcacggtgttccgttg.........cgccagaagc
+sample_008.bnk gcgctctggtttccgtcacggtgttccgttg.........cgccagaagc
+sample_003.bnk gcgctctggtttccgtcacggtgttccgttg.........cgccagaagc
+sample_007.bnk gcgctctggtttccgtcacggtgttccgttg.........cgccagaagc
+sample_004.bnk gcgctctggtttccgtcacggtgttccgttg.........cgccagaagc
+sample_006.bnk gcgctctggtttccgtcacggtgttccgttg.........cgccagaagc
+sample_009.bnk gcgctctggcttccgtcacggtgttccgttg.........cgccagaagc
+sample_010.bnk gcgctctggcttcgtcacgtgtgctctgttg.........cgccagaagc
+sample_011.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_014.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_017.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_020.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_012.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_015.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_016.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_013.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_019.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_018.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_021.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_022.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_023.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_024.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_026.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_030.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_025.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_031.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_028.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_029.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_038.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_050.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_056.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_033.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_047.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_034.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_048.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_039.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_046.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_036.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_055.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_041.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_040.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_027.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_032.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_049.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_035.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_037.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_059.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_044.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_052.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_057.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_051.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_045.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_043.bnk gcgc.................tgctctggtt.........cgccagaagc
+sample_053.bnk gcgc.................tgctctggtttgtgtcttgcgccagaagc
+sample_054.bnk gcgc.................tgctctggttt........cgccagaagc
+sample_058.bnk gcgc.................tgctctggttt........cgccagaagc
+sample_060.bnk gcgc.................tgctctggttt........cgccagaagc
+sample_042.bnk gcgc.................tgctctggtt.........cgccagaagc
+
+           251                                            300
+sample_001.bnk ggtttagtcatgctggccacatgacccggaa.agctgtctgtggacaaac
+sample_002.bnk ggtttagtcatgctggccacatgacccggaa.agctgtctgtggacaaac
+sample_005.bnk ggtttagtcatgctggccacatgacccggaa.agctgtctgtggacaaac
+sample_008.bnk ggtttagtcatgctggccacatgacccggaa.agctgtctgtggacaaac
+sample_003.bnk ggtttagtcatgctggccacatgacccggaa.agctgtctgtggacaaac
+sample_007.bnk ggtttagtcatgctggccacatgacccggaa.agctgtctgtggacaaac
+sample_004.bnk ggtttagtcatgctggccacatgacccggaa.agctgtctgtggacaaac
+sample_006.bnk ggtttagtcatgctggccacatgacccggaa.agctgtctgtggacaaac
+sample_009.bnk ggtttagtcatgctggccacatgacccggaa.agctgtctgtggacaaac
+sample_010.bnk ggtttagtcatgctggccacatgacccggaa.agctgtctgtggacaaac
+sample_011.bnk ggctttgtcatgctggccacatgacctggaa..gctgt..........ac
+sample_014.bnk ggctttgtcatgctggccacatgacctggaa..gctgt..........ac
+sample_017.bnk ggctttgtcatgctggccacatgacctggaa..gctgt..........ac
+sample_020.bnk ggctttgtcatgctggccacatgacctggaa..gctgt..........ac
+sample_012.bnk ggctttgtcatgctggccacatgacccggaa..gctgt..........ac
+sample_015.bnk ggctttgtcatgctggccacatgacccggaa..gctgt..........ac
+sample_016.bnk ggctttgtcatgctggccacatgacccggaa..gctgt..........ac
+sample_013.bnk ggctttgtcatgctggccacatgacccggaa..gctgt..........ac
+sample_019.bnk ggctttgtcatgctggccacatgacctggaa..gctgt..........ac
+sample_018.bnk ggcttagtcatgctggccacatgacccggaa..gctgt..........ac
+sample_021.bnk ggcttagtcatgctggccacatgacctggaa..gctgt..........ac
+sample_022.bnk ggcttagtcatgctggccacatgacctggaa..gctgt..........ac
+sample_023.bnk ggctttgtcatgctggccacatgacctggaa..gctgt..........ac
+sample_024.bnk ggctttgtcatgctggccacatgacctggaa..gctgt..........ac
+sample_026.bnk ggcttagtcatgctggccacatgacctggaa..gctgt..........ac
+sample_030.bnk ggcttagtcatgctggccacatgacctggaa..gctgt..........ac
+sample_025.bnk ggcttagtcatgctggccacatgacccggaa..gctgt..........ac
+sample_031.bnk ggcttagtcatgctggccacatgacccggaa..gctgt..........ac
+sample_028.bnk ggcttagtcatgctggccacatgacccggaa..gctgt..........ac
+sample_029.bnk ggcttagtcatgctggccacatgacccggaa..gctgt..........ac
+sample_038.bnk ggcttagtcatgctggccacatgacccggaa..gctgt..........ac
+sample_050.bnk ggcttagtcatgctggccacatgacccggaa..gctgt..........ac
+sample_056.bnk ggcttagtcatgctggccacatgacccggaa..gctgt..........ac
+sample_033.bnk ggcttagtcatgctggccacatgacccggaa..gctgt..........ac
+sample_047.bnk ggcttagtcatgctggccacatgacccggaa..gctgt..........ac
+sample_034.bnk ggcttagtcatgctggccacatgacctggaa..gctgt..........ac
+sample_048.bnk ggcttagtcatgctggccacatgacctggaa..gctgt..........ac
+sample_039.bnk ggcttagtcatgctggccacatgacccggaa..gctgt..........ac
+sample_046.bnk ggcttagtcatgctggccacatgacccggaa..gctgt..........ac
+sample_036.bnk ggcttagtcatgctggccacatgacccggaa..gctgt..........ac
+sample_055.bnk ggcttagtcatgctggccacatgacccggaa..gctgt..........ac
+sample_041.bnk ggcttagtcatgctggccacatgacccggaa..gctgt..........ac
+sample_040.bnk ggcttagtcatgctggccacatgacctggaa..gctgt..........ac
+sample_027.bnk ggcttagtcatgctggccacatgacccggaa..gctgt..........ac
+sample_032.bnk ggcttagtcatgctggccacatgacccggaa..gctgt..........ac
+sample_049.bnk ggcttagtcatgctggccacatgacccggaa..gctgt..........ac
+sample_035.bnk ggcttagtcatgctggccacatgacctggaa..gctgt..........ac
+sample_037.bnk ggcttagtcatgctggccacatgacccggaa..gctgtctg.ggacaaac
+sample_059.bnk ggcttagtcatgctggccacatgacccggaa..gctgtctg.ggacaaac
+sample_044.bnk ggcttagtcatgctggccacatgacccggaa..gctgtctg.ggacaaac
+sample_052.bnk ggcttagtcatgctggccacatgacccggaa..gctgtctgcggacaaac
+sample_057.bnk ggcttagtcatgctggccacatgacccggaa..gctgtctgcggacaaac
+sample_051.bnk ggcttagtcatgctggccacatgacccggaa..gctgtctgcg..caaac
+sample_045.bnk ggcttagtcatgctggccacatgacccggaa..gctgtt...ggacaaac
+sample_043.bnk ggcttagtcatgctggccacatgacccggaa..gctgtct.cggacaaac
+sample_053.bnk ggcttagtcatgctggccacatgacccggaaaaactgtctgcggacaaac
+sample_054.bnk ggcttagtcatgctggccacatgacccggaaaaactgtctgcggacaaac
+sample_058.bnk ggcttagtcatgctggccacatgacccggaaaaactgtctgcggacaaac
+sample_060.bnk ggcttagtcatgctggccacatgacccggaaaaactgtctgcggacaaac
+sample_042.bnk agctttgtcatgctggccacatgacccggag..gctgtcttcggacaaac
+
+           301                                            350
+sample_001.bnk gccggctccctcggcctg.aaagcgagatgagcgccgcaaccccatagtc
+sample_002.bnk gccggctccctcggcctg.aaagcgagatgagcgccgcaaccccatagtc
+sample_005.bnk gccggctccctcggcctg.aaagcgagatgagcgccgcaaccccatagtc
+sample_008.bnk gccggctccctcggcctg.aaagcgagatgagcgccgcaaccccatagtc
+sample_003.bnk gccggctccctcggcctg.aaagcgagatgagcgccgcaaccccatagtc
+sample_007.bnk gccggctccctcggcctg.aaagcgagatgagcgccgcaaccccatagtc
+sample_004.bnk gccggctccctcggcctg.aaagcgagatgagcgccgcaaccccatagtc
+sample_006.bnk gccggctccctcggcctg.aaagcgagatgagcgccgcaaccccatagtc
+sample_009.bnk gccggctccctcggcctg.aaagcgagatgagcgccgcaaccccatagtc
+sample_010.bnk gccggctccctcggcctgtaaagcgagatgagcgccgcaaccccatagtc
+sample_011.bnk gccggct..ctcggccaataaagcgagatgagcgccgcaaccccagagtc
+sample_014.bnk gccggct..ctcggccaataaagcgagatgagcgccgcaaccccagagtc
+sample_017.bnk gccggct..ctcggccaataaagcgagatgagcgccgcaaccccagagtc
+sample_020.bnk gccggct..ctcggccaataaagcgagatgagcgccgcaaccccagagtc
+sample_012.bnk gccggct..ctcggccaataaagcgagatgagcgccgcaaccccagagtc
+sample_015.bnk gccggct..ctcggccaataaagcgagatgagcgccgcaaccccagagtc
+sample_016.bnk gccggct..ctcggccaataaagcgagatgagcgccgcaaccccagagtc
+sample_013.bnk gccggct..ctcggccaataaagcgagatgagcgccgcaaccccagagtc
+sample_019.bnk gccggct.cctcggccaataaagcgagatgagcgccgcaaccccagagtc
+sample_018.bnk gccggctccctcggccaataaagcgagatgagcgccgcaaccccagagtc
+sample_021.bnk gccggctccctcggccaataaagcgagatgagcgccgcaaccccagagtc
+sample_022.bnk gccggctccctcggccaataaagcgagatgagcgccgcaaccccagagtc
+sample_023.bnk gccggctccctcggccaataaagcgagatgagcgccgcaaccccagagtc
+sample_024.bnk gccggctccctcggccaataatgcgagatgagcgccgcaaccccagagtc
+sample_026.bnk gccggctccctcggccaataatgcgagatgagcgccgcaaccccagagtc
+sample_030.bnk gccggctccctcggccaataatgcgagatgagcgccgcaaccccagagtc
+sample_025.bnk gccggctccctcggccaataaagcgagatgagcgccgcaaccccagagtc
+sample_031.bnk gccggctccctcggccaataaagcgagatgagcgccgcaaccccagagtc
+sample_028.bnk gccggctccctcggccaataaagcgagatgagcgccgcaaccccagagtc
+sample_029.bnk gccggctccctcggccaataaagcgagatgagcgccgcaaccccagagtc
+sample_038.bnk gccggctccctcggccaataaagcgagatgagcgccgcaaccccagagtc
+sample_050.bnk gccggctccctcggccaataaagcgagatgagcgccgcaaccccagagtc
+sample_056.bnk gccggctccctcggccaataaagcgagatgagcgccgcaaccccagagtc
+sample_033.bnk gccggctccctcggccagtaaagcgagatgagcgccgcaaccccagagtc
+sample_047.bnk gccggctccctcggccagtaaagcgagatgagcgccgcaaccccagagtc
+sample_034.bnk gccggctccctcggccaataaagcgagatgagcgccgcaaccccagagtc
+sample_048.bnk gccggctccctcggccaataaagcgagatgagcgccgcaaccccagagtc
+sample_039.bnk gccggctccctcggccaataaagcgagatgagcgccgcaaccccagagtc
+sample_046.bnk gccggctccctcggccaataaagcgagatgagcgccgcaaccccagagtc
+sample_036.bnk gccggctccctcggccaataaagcgagatgagcgccgcaaccccagagtc
+sample_055.bnk gccggctccctcggccaataaagcgagatgagcgccgcaaccccagagtc
+sample_041.bnk gccggctccctcggccaataaagcgagatgagcgccgcaaccccagagtc
+sample_040.bnk gccggctccctcggccaataaagcgagatgagcgccgcaaccccagagtc
+sample_027.bnk gccggctccctcggccaataaagcgagatgagcgccgcaaccccagagtc
+sample_032.bnk gccggctccctcggccaataaagcgagatgagcgccgcaaccccagagtc
+sample_049.bnk gccggctccctcggccagtaaagcgagatgagcgccgcaaccccagagtc
+sample_035.bnk gccggctccctcggccaataaagcgagatgagcgccgcaaccccagagtc
+sample_037.bnk gccggctccctcggccaataaagcgagatgagcgccgcaaccccagagtc
+sample_059.bnk gccggctccctcggccagtaaagcgagatgagcgccgcaaccccagagtc
+sample_044.bnk gccggctccctcggcctatagagcgagatgagcgccgcaaccccagagtc
+sample_052.bnk gccggctccctcggcctatagagcgagatgagcgccgcaaccccagagtc
+sample_057.bnk gccggctccctcggcctatagagcgagatgagcgccgcaaccccagagtc
+sample_051.bnk gccggctccctcggccaataaagcgagatgagcgccgcaaccccagagtc
+sample_045.bnk gccggctccctcggccaataaagcgagatgagcgccgcaaccccagagtc
+sample_043.bnk gccggctccctcggcctatagagcgagatgagcaccgcaaccccagagtc
+sample_053.bnk gccggctccctcggcctgtaaagcgagatgagcgccgcaaccccagagtc
+sample_054.bnk gccggctccctcggccagtaaagcgagatgagcgccgcaaccccagagtc
+sample_058.bnk gccggctccctcggccagtaaagcgagatgagcgccgcaaccccagagtc
+sample_060.bnk gccggctccctcggccagtaaagcgagatgagcgccgcaaccccagagtc
+sample_042.bnk gccggctccctcggcctatagagcgagatgagca.cgcaaccccagagtc
+
+               351                                          398
+sample_001.bnk gcctttgactggacttaaccgtccaggggtcctttacctttacctttt
+sample_002.bnk gcctttgactggacttaaccgtccaggggtcctttacctttacctttt
+sample_005.bnk gcctttgactggacttaaccgtccaggggtcctttacctttacctttt
+sample_008.bnk gcctttgactggacttaaccgtccaggggtcctttaccttttcctttt
+sample_003.bnk gcctttgactggacttaaccgtccaggggtcctttacctttacctttt
+sample_007.bnk gcctttgactggacttaaccgtccaggggtcctttacctttacctttt
+sample_004.bnk gcctttgactggacttaaccgtccaggggtcctttacctttacctttt
+sample_006.bnk gcctttgactggacttaaccgtccaggggtcctttacctttaccttt~
+sample_009.bnk gcctttgactggacttaaccgtccaggggtcctttacctttcctttt~
+sample_010.bnk g.attcgactggacttaac.gtccagggtccctttacctttaccttt~
+sample_011.bnk ggacacgactggacctaatggtcaggggtccctttacctttaccttt~
+sample_014.bnk ggacacgactggacctaatggtcaggggtccctttacctttaccttt~
+sample_017.bnk ggacacgactggacctaatggtcaggggtccctttacctttaccttt~
+sample_020.bnk ggacacgactggacctaatggtcaggggtccctttacctttaccttt~
+sample_012.bnk ggacacgactggacctaatggtcaggggtccctttacctttaccttt~
+sample_015.bnk ggacacgactggacctaatggtcaggggtccctttacctttaccttt~
+sample_016.bnk ggacacgactggacctaatggtcaggggtccctttacctttaccttt~
+sample_013.bnk ggacacgactggacctaatggtcaggggtccctttacctttaccttt~
+sample_019.bnk ggacacgactggacctaatggtcaggggtccctttacctttaccttt~
+sample_018.bnk ggacacgactggacctaatggtcaggggtccctttacctttacctt~~
+sample_021.bnk ggacacgactggacctaatggtcaggggtccctttacctttacctt~~
+sample_022.bnk ggacacgactggacctaatggtcaggggtccctttacctttaccttt~
+sample_023.bnk ggacacgactggacctaatggtcaggggtccctttacctttacctt~~
+sample_024.bnk ggtcacgactggacctaatggtcaggggtccctttacctttaccttt~
+sample_026.bnk ggtcacgactggacctaatggtcaggggtccctttacctttaccttt~
+sample_030.bnk ggtcacgactggacctaatggtcaggggtccctttacctttaccttt~
+sample_025.bnk gtccacgactggacctaatggtcaggggtccctttacctttacctt~~
+sample_031.bnk gtccacgactggacctaatggtcaggggtccctttacctttaccttt~
+sample_028.bnk gtccgcgactggacctaatggtcaggggtccctttacctttaccttt~
+sample_029.bnk gtccgcgactggacctaatggtcaggggtccctttacctttaccttt~
+sample_038.bnk gtccgcgactggacctaatggtcaggggtccctttacctttaccttt~
+sample_050.bnk gtccgcgactggacctaatggtcaggggtccctttacctttaccttt~
+sample_056.bnk gtccgcgactggacctaatggtcaggggtccctttacctttacctt~~
+sample_033.bnk gtccgcgactggacctaatggtcaggggtccctttacctttaccttt~
+sample_047.bnk gtccgcgactggacctaatggtcaggggtccctttacctttaccttt~
+sample_034.bnk gtccgcgactggacctaatggtcaggggtccctttacctttacctt~~
+sample_048.bnk gttcacgactggacctaatggtcaggggtccctttacctttaccttt~
+sample_039.bnk ggccacgactggacctaatggtcaggggtccctttacctttacctt~~
+sample_046.bnk gtccgcgactggacctaatggtcaggggtccctttacctttacc~~~~
+sample_036.bnk gtccacgactggacctaatggtcaggggtccctttacctttacct~~~
+sample_055.bnk gtccgcgactggacctaatggtcaggggtccctttacctttaccttt~
+sample_041.bnk ggccacgactggacctaatggtcaggggtccctttacctttaccttt~
+sample_040.bnk ggtcacgactggacctaatggtcaggggtccctttacctttaccttt~
+sample_027.bnk gg.cacgactggacctaatggtcaggggtccctttacctttaccttt~
+sample_032.bnk gg.cacgactggacctaatggtcaggggtccctttacctttaccttt~
+sample_049.bnk gg.cacgactggacctaatggtcaggggtccctttacctttacc~~~~
+sample_035.bnk gg.cacgactggacctaatggtcaggggtccctttacctttacctt~~
+sample_037.bnk gtccgcgactggacctaatggtcaggggtccctttacctttaccttt~
+sample_059.bnk gtccgcgactggacctaatggtcaggggtccctttacctttacct~~~
+sample_044.bnk gtccgcgactggacctaacggtcaggggtacctttacctttaccttt~
+sample_052.bnk gtccgcgactggacctaacggtcaggggtacctttacctttacct~~~
+sample_057.bnk gtccgcgactggacctaacggtcaggggtacctttacctttaccttt~
+sample_051.bnk gtccgcgactggacctaatggtcaggggtccctttacctttaccttt~
+sample_045.bnk gtccgcgactggacctaatggtcaggggtccctttacctttacctt~~
+sample_043.bnk ggccacgactggacctaatggtcaggggtccctttacctttaccttt~
+sample_053.bnk gtctgcgactggacttaactgtcaggggt.cctttacctttacctttt
+sample_054.bnk gttcgcgactggacttaactgtcaggggt.cctttacctttaccttt~
+sample_058.bnk gttcgcgactggacttaactgtcaggggt.ccttttcctttacctt~~
+sample_060.bnk gtccgcgactggacttaactgtcaggggt.cctttacctttaccttt~
+sample_042.bnk ggacacgactggacctgatggtcaggggtccctttacctttaccttt~
+

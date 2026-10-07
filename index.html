@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Darevskia pan-SINEome data</title>
+<style>
+  :root { --fg:#1a2634; --bg:#fff; --muted:#666; --border:#ccc; --th:#f2f2f2; --link:#1a5fb4; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --fg:#e8e8e3; --bg:#141413; --muted:#a8a79e; --border:#3a3a36; --th:#22221f; --link:#6da7ec; } }
+  :root[data-theme="dark"] { --fg:#e8e8e3; --bg:#141413; --muted:#a8a79e; --border:#3a3a36; --th:#22221f; --link:#6da7ec; }
+  body { font-family: Calibri, 'Segoe UI', Arial, sans-serif; margin: 0; background: var(--bg); color: var(--fg); }
+  header { background: #1a2634; color: #fff; padding: 24px 32px; }
+  header h1 { margin: 0 0 6px 0; font-size: 1.4rem; } header p { margin: 0; color: rgba(255,255,255,.75); }
+  main { max-width: 900px; margin: 0 auto; padding: 24px 16px; }
+  table { border-collapse: collapse; width: 100%; margin-top: 12px; }
+  th, td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; } th { background: var(--th); }
+  a { color: var(--link); } .muted { color: var(--muted); font-size: .9rem; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Darevskia pan-SINEome &mdash; data</h1>
+  <p>dar_squam1 SINE copies, subfamilies and orthologous loci in seven assemblies of bisexual and parthenogenetic Darevskia.</p>
+</header>
+<main>
+  <table>
+    <thead><tr><th>Page</th><th>Content</th></tr></thead>
+    <tbody>
+      <tr><td><a href="subfam/dar_squam1_30000/">SubFam, 30,000 copies</a></td><td>600 chunk consensi of a stratified sample (equal number per assembly), for peeling into subfamilies</td></tr>
+      <tr><td><a href="subfam/dar_squam1_3000/">SubFam, 3,000 copies</a></td><td>the partial test run (60 chunks)</td></tr>
+    </tbody>
+  </table>
+  <p class="muted" style="margin-top:24px;">Pairwise orthology tables and the pan-SINEome builds (dar7 on <code>main</code>, dar8 on branch
+  <code>actions/pairs21</code>) are in the repository. Tools:
+  <a href="https://github.com/Toki-bio/SINE_orth_loc">SINE_orth_loc</a>, <a href="https://github.com/Toki-bio/SubFam">SubFam</a>,
+  <a href="https://github.com/Toki-bio/SINEderella">SINEderella</a>.</p>
+  <p class="muted">Source: <a href="https://github.com/Toki-bio/darevskia-sineome-data">github.com/Toki-bio/darevskia-sineome-data</a></p>
+</main>
+</body>
+</html>
