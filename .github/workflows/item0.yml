@@ -56,13 +56,13 @@ jobs:
           # only the 20-mers that occur in the flanks are needed (fs9 holds the set in memory): flanks of 120 bp on each side
           bedtools flank -i g/copies.bed -g g/genome.fa.fai -b 120 | bedtools getfasta -fi g/genome.fa -bed - > g/flanks.fa
           mkdir -p g/kmctmp2; kmc -k20 -ci1 -m4 -t4 -fm g/flanks.fa g/fl20 g/kmctmp2 > /dev/null 2>&1
-          kmc_tools simple g/k20 g/fl20 intersect g/k20fl -ocleft
-          kmc_tools transform g/k20fl dump g/k20.txt; wc -l g/k20.txt; head -2 g/k20.txt
+          kmc_tools -hp simple g/k20 g/fl20 intersect g/k20fl -ocleft
+          kmc_tools -hp transform g/k20fl dump g/k20.txt; wc -l g/k20.txt; head -2 g/k20.txt
           rm -rf g/kmctmp g/kmctmp2 g/k20.kmc_* g/fl20.kmc_* g/k20fl.kmc_* g/flanks.fa
       - name: fs9 twins, SOFTMASK 0 and 1
         run: |
           for sm in 0 1; do
-            ( time SOFTMASK=$sm KCOUNT=g/k20.txt bash sd/flankscan/fs9_twins.sh g/genome.N.fa g/copies.bed g/tw$sm > g/tw$sm.log 2>&1 ) 2>&1 | tail -3
+            ( time SOFTMASK=$sm KCOUNT=$PWD/g/k20.txt bash sd/flankscan/fs9_twins.sh g/genome.N.fa g/copies.bed g/tw$sm > g/tw$sm.log 2>&1 ) 2>&1 | tail -3
             tail -8 g/tw$sm.log; cp g/tw$sm/summary.txt $D/twins_softmask$sm.summary.txt
             gzip -c g/tw$sm/flank_groups.tsv > $D/twins_softmask$sm.flank_groups.tsv.gz; gzip -c g/tw$sm/copy_status.tsv > $D/twins_softmask$sm.copy_status.tsv.gz
           done
