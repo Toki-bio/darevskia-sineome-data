@@ -13,6 +13,7 @@ nothing written to `/data/V/toki/Darevskia_v2`).
 | item | state | waits for |
 |---|---|---|
 | subfamilies (SubFam, 30,000 copies) | page published (`subfam/dar_squam1_30000/`, Pages) | **your peeling** — blocks all SINE work |
+| 0 within-genome uniqueness (new) | designed, uses SINEderella fs9 | your go-ahead (needs no subfamilies, no reads) |
 | 1 haplotigs / satellites, 4 genes, 5 dimers | designs done (`plans/dimers-satellites.md`) | subfamilies |
 | 2 minimap2 synteny | not started | subfamilies (genome-level, could run earlier on request) |
 | 3 Cactus | prompt for Monsoon (`plans/cactus-monsoon-prompt.md`) | you starting it on Monsoon |
@@ -54,6 +55,42 @@ Proposed sequence: 2 and 1a together → 1b, 1c → 6 → 5 → 4 → 3. Each it
 for the next.
 
 ---
+
+## 0. Within-genome uniqueness of SINE-containing loci, before any between-genome comparison (new, 2026-10-11)
+
+Principle (Sergei): a locus can only be called orthologous between genomes once it is known to be single within each
+genome. Today SINE_orth_loc checks this only indirectly (copies > 300 bp apart; bwa MAPQ of the left flank in the
+OTHER genome; multi-copy clusters, rescue by two flanks; the registry flags `multicopy` afterwards). A copy whose
+neighbourhood exists twice in its own genome (haplotig, segmental duplication, array unit, carried by another element)
+enters the pairwise step as if it were unique, and the duplication surfaces later as X (65k in dar8).
+
+Step 0, per genome, on all dar_squam1 copies (and on the empty sites the copies map to):
+1. **Twins** (SINEderella `flankscan/fs9_twins.sh`, implemented and tested 2026-10-01): copies whose proximal flanks
+   (100 bp each side, from the junction outward, in element orientation, repeats and genome-frequent 20-mers masked)
+   are colinear-similar to another copy's: tier 1 ≥ 85 %, tier 2 70–85 %, `array` for neighbours < 2 kb, `untestable`
+   at contig ends. Toy: segdups same/cross contig/inverted found down to 85 % (tier 2 to 78 %), hot-spot insertions in
+   repeats not called; real rsi families 0.3–2.5 % twins.
+2. **Duplicated regions** (`fs9_dupregion.sh`): a flank (200 bp) that maps elsewhere in the same genome ≥ 100 bp at
+   ≥ 85 %, not a copy at the same offset: the insertion may be independent but its neighbourhood is not unique.
+3. **Extension for orthology** (new): the same test on the windows SINE_orth_loc actually uses (300 bp left flank,
+   right flank up to the window), and for haplotigs a long-range test: both copies of a twin pair inside contig-scale
+   duplicated blocks at ≥ 98 % (from item 2's minimap2 self-alignment) = haplotig twins; 85–98 % = paralogous segmental
+   duplication.
+4. Per copy a within-genome status: `unique`, `twin:<group>` (haplotig / segdup / array), `dup-region`, `untestable`.
+
+How it changes orthology:
+- haplotig twins are collapsed to one locus before the pairwise step (one representative, the twin kept as an allele;
+  disagreeing P/A between the two = heterozygous insertion, `het`);
+- segdup twins and dup-region copies go through the pairwise step as a group: orthology only if the two-flank
+  placement is unique on both sides (rescue logic), otherwise reported as paralogous, never as X by accident;
+- the registry gets the within-genome status as input instead of inferring `multicopy` afterwards.
+
+Gates: (a) fs9's own toy plus the SINE_orth_loc simulation (it has a twice-assembled region `ccc_chr9` and
+segmental duplications): every planted twin found, no unique copy flagged; (b) one genome (nai: 19.6k multicopy
+flags), checked against dar8's two-contig multicopy groups (how many are explained by twins / dup-region / haplotig
+blocks) and 20 loci by eye; (c) all seven genomes; (d) rerun of the registry (and, where the clusters change, of
+the pairs) as dar8.1. Needs no subfamilies and no reads; cloud runners suffice (fs9 ran all rsi families in < 4 min;
+the genome 20-mer count is the heavy part: jellyfish, ~1.5 Gb genome).
 
 ## 1. Registry: haplotigs, then satellites
 
