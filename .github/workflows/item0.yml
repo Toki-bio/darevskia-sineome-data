@@ -1,0 +1,93 @@
+name: item 0 gate b - within-genome uniqueness of SINE copies (fs9) on one genome
+# started by a push that changes item0/request.txt (one line: genome code, e.g. nai)
+on:
+  push:
+    branches: [item0]
+    paths: ['item0/request.txt']
+  workflow_dispatch:
+permissions:
+  contents: write
+env:
+  FS9_REF: claude/fs9-5prime-kmer-mask
+jobs:
+  fs9:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+      - name: tools
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL || true
+          sudo apt-get update -q && sudo apt-get install -y -q bedtools samtools seqkit gawk minimap2 mafft kmc pigz > /dev/null
+          git clone -q --branch $FS9_REF https://github.com/Toki-bio/SINEderella sd
+          echo "FS9_COMMIT=$(git -C sd rev-parse --short HEAD)" >> $GITHUB_ENV
+          kmc --version 2>&1 | head -1 || kmc 2>&1 | head -2; free -g | head -2; df -h / | tail -1
+      - name: genome, copies, SINE pieces
+        run: |
+          SP=$(tr -dc a-z < item0/request.txt); echo "SP=$SP" >> $GITHUB_ENV; D=item0/$SP; mkdir -p $D g; echo "D=$D" >> $GITHUB_ENV
+          acc=$(awk -v s=$SP '$1==s{print $2}' <<'LIST'
+          dva GCA_034642135.1
+          dvl GCA_024498535.1
+          nai GCA_034642065.1
+          mix GCA_034641385.1
+          arm GCA_034641395.1
+          unp GCA_032766555.1
+          unm GCA_032766585.1
+          LIST
+          )
+          dir=https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/${acc:4:3}/${acc:7:3}/${acc:10:3}
+          name=$(curl -sSfL --retry 8 --retry-all-errors "$dir/" | grep -o "${acc}_[^/\"<]*" | head -1)
+          curl -sSfL --retry 8 --retry-all-errors "$dir/$name/${name}_genomic.fna.gz" | pigz -dc |
+            awk '/^>/{print $1; next} {print}' > g/genome.fa
+          samtools faidx g/genome.fa
+          awk '{s+=$2} END {print "genome bp", s}' g/genome.fa.fai
+          # soft-masked share of the genome
+          seqkit seq -s g/genome.fa | awk '{t += length($0); l += gsub(/[acgtn]/, "")} END {printf "soft-masked %.1f%%\n", 100 * l / t}' | tee $D/softmask.txt
+          zcat old/beds/$SP-dar_squam1.bed.gz | awk -F'\t' -v OFS='\t' '{print $1,$2,$3,$1":"$2"-"$3"("$6")",0,$6}' | sort -k1,1 -k2,2n > g/copies.bed
+          # every SINE piece of the nest scan (>= 20 nt, incl. fragments) masked with N, so a SINE inside a flank is never evidence
+          git show HEAD:pairs/nest/nest_$SP.elements.tsv.gz | zcat | awk -F'\t' -v OFS='\t' 'NR > 1 {print $3, $4, $5}' > g/pieces.bed
+          bedtools maskfasta -fi g/genome.fa -bed g/pieces.bed -fo g/genome.N.fa
+          samtools faidx g/genome.N.fa
+          echo "$(wc -l < g/copies.bed) copies, $(wc -l < g/pieces.bed) SINE pieces masked"
+      - name: genome 20-mers (KMC, canonical, count > 20)
+        run: |
+          mkdir -p g/kmctmp
+          ( time kmc -k20 -ci21 -cs100000000 -m12 -t4 -fm g/genome.fa g/k20 g/kmctmp > g/kmc.log 2>&1 ) 2>&1 | tail -3
+          # only the 20-mers that occur in the flanks are needed (fs9 holds the set in memory): flanks of 120 bp on each side
+          bedtools flank -i g/copies.bed -g g/genome.fa.fai -b 120 | bedtools getfasta -fi g/genome.fa -bed - > g/flanks.fa
+          mkdir -p g/kmctmp2; kmc -k20 -ci1 -m4 -t4 -fm g/flanks.fa g/fl20 g/kmctmp2 > /dev/null 2>&1
+          kmc_tools simple g/k20 g/fl20 intersect g/k20fl -ocleft
+          kmc_tools transform g/k20fl dump g/k20.txt; wc -l g/k20.txt; head -2 g/k20.txt
+          rm -rf g/kmctmp g/kmctmp2 g/k20.kmc_* g/fl20.kmc_* g/k20fl.kmc_* g/flanks.fa
+      - name: fs9 twins, SOFTMASK 0 and 1
+        run: |
+          for sm in 0 1; do
+            ( time SOFTMASK=$sm KCOUNT=g/k20.txt bash sd/flankscan/fs9_twins.sh g/genome.N.fa g/copies.bed g/tw$sm > g/tw$sm.log 2>&1 ) 2>&1 | tail -3
+            tail -8 g/tw$sm.log; cp g/tw$sm/summary.txt $D/twins_softmask$sm.summary.txt
+            gzip -c g/tw$sm/flank_groups.tsv > $D/twins_softmask$sm.flank_groups.tsv.gz; gzip -c g/tw$sm/copy_status.tsv > $D/twins_softmask$sm.copy_status.tsv.gz
+          done
+      - name: fs9 dup-region
+        run: |
+          ( time bash sd/flankscan/fs9_dupregion.sh g/genome.N.fa g/copies.bed g/dup 4 > g/dup.log 2>&1 ) 2>&1 | tail -3; tail -2 g/dup.log
+          gzip -c g/dup/dupregion.tsv > $D/dupregion.tsv.gz
+      - name: against dar8 multicopy groups
+        run: |
+          git show HEAD:pan/dar8.groups.tsv.gz > g/dar8.groups.tsv.gz
+          for sm in 0 1; do
+            echo "== SOFTMASK=$sm" | tee -a $D/dar8_multicopy.txt
+            python3 item0/compare_dar8.py --groups g/dar8.groups.tsv.gz --sp $SP --bed g/copies.bed --status g/tw$sm/copy_status.tsv \
+              --pairs g/tw$sm/flank_groups.tsv --dup g/dup/dupregion.copies -o g/cmp$sm.tsv | tee -a $D/dar8_multicopy.txt
+            gzip -c g/cmp$sm.tsv > $D/dar8_multicopy_softmask$sm.tsv.gz
+          done
+      - name: example pairs for inspection
+        run: |
+          bash item0/examples.sh g/genome.fa g/copies.bed g/tw0/flank_groups.tsv 20 $D/examples
+          awk -F'\t' '$2 == "unexplained"' <(zcat $D/dar8_multicopy_softmask0.tsv.gz) | head -20 > $D/examples/unexplained.tsv
+          ls $D/examples | head
+      - name: commit
+        if: always()
+        run: |
+          printf 'fs9 %s (%s); genome %s\n' "$FS9_REF" "$FS9_COMMIT" "$SP" > $D/VERSION
+          git config user.name "github-actions[bot]"; git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add $D && git commit -q -m "item 0 gate b: fs9 within-genome uniqueness on $SP (run ${{ github.run_id }})" || exit 0
+          for i in 1 2 3; do git pull -q --rebase origin item0 && git push -q origin HEAD:item0 && exit 0; sleep 10; done; exit 1
