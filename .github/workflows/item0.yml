@@ -24,7 +24,7 @@ jobs:
           kmc --version 2>&1 | head -1 || kmc 2>&1 | head -2; free -g | head -2; df -h / | tail -1
       - name: genome, copies, SINE pieces
         run: |
-          SP=$(tr -dc a-z < item0/request.txt); echo "SP=$SP" >> $GITHUB_ENV; D=item0/$SP; mkdir -p $D g; echo "D=$D" >> $GITHUB_ENV
+          SP=$(head -1 item0/request.txt | tr -dc a-z); echo "SP=$SP" >> $GITHUB_ENV; D=item0/$SP; mkdir -p $D g; echo "D=$D" >> $GITHUB_ENV
           acc=$(awk -v s=$SP '$1==s{print $2}' <<'LIST'
           dva GCA_034642135.1
           dvl GCA_024498535.1
