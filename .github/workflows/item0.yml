@@ -66,10 +66,11 @@ jobs:
             tail -8 g/tw$sm.log; cp g/tw$sm/summary.txt $D/twins_softmask$sm.summary.txt
             gzip -c g/tw$sm/flank_groups.tsv > $D/twins_softmask$sm.flank_groups.tsv.gz; gzip -c g/tw$sm/copy_status.tsv > $D/twins_softmask$sm.copy_status.tsv.gz
           done
-      - name: fs9 dup-region
+      - name: fs9 dup-region (left out on runners)
         run: |
-          ( time bash sd/flankscan/fs9_dupregion.sh g/genome.N.fa g/copies.bed g/dup 4 > g/dup.log 2>&1 ) 2>&1 | tail -3; tail -2 g/dup.log
-          gzip -c g/dup/dupregion.tsv > $D/dupregion.tsv.gz
+          # fs9_dupregion maps all flanks with a minimap2 index (k 12, w 4) of the whole genome: more than the runner's 16 GB on a
+          # 1.8 Gb genome (run 38166158921 was killed). Left out here; on Monsoon or with a split index later.
+          mkdir -p g/dup; : > g/dup/dupregion.copies; echo "dup-region not run on the runner" > $D/dupregion.NOT_RUN
       - name: against dar8 multicopy groups
         run: |
           git show HEAD:pan/dar8.groups.tsv.gz > g/dar8.groups.tsv.gz
