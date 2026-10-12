@@ -1,2 +1,2 @@
-nai
-# run 4: without dup-region (runner memory)
+all
+# gate c: all seven genomes, SOFTMASK=0, block identity

@@ -1,5 +1,5 @@
-name: item 0 gate b - within-genome uniqueness of SINE copies (fs9) on one genome
-# started by a push that changes item0/request.txt (one line: genome code, e.g. nai)
+name: item 0 - within-genome uniqueness of SINE copies (fs9) per genome
+# started by a push that changes item0/request.txt (first line: genome codes, space separated, or 'all')
 on:
   push:
     branches: [item0]
@@ -10,9 +10,22 @@ permissions:
 env:
   FS9_REF: claude/fs9-5prime-kmer-mask
 jobs:
+  list:
+    runs-on: ubuntu-latest
+    outputs: {sp: '${{ steps.l.outputs.sp }}'}
+    steps:
+      - uses: actions/checkout@v4
+      - id: l
+        run: |
+          r=$(head -1 item0/request.txt); [ "$r" = all ] && r="dva dvl nai mix arm unp unm"
+          echo "sp=$(python3 -c "import json,sys; print(json.dumps(sys.argv[1:]))" $r)" >> $GITHUB_OUTPUT
   fs9:
+    needs: list
     runs-on: ubuntu-latest
     timeout-minutes: 350
+    strategy:
+      fail-fast: false
+      matrix: {sp: '${{ fromJson(needs.list.outputs.sp) }}'}
     steps:
       - uses: actions/checkout@v4
       - name: tools
@@ -24,7 +37,7 @@ jobs:
           kmc --version 2>&1 | head -1 || kmc 2>&1 | head -2; free -g | head -2; df -h / | tail -1
       - name: genome, copies, SINE pieces
         run: |
-          SP=$(head -1 item0/request.txt | tr -dc a-z); echo "SP=$SP" >> $GITHUB_ENV; D=item0/$SP; mkdir -p $D g; echo "D=$D" >> $GITHUB_ENV
+          SP=${{ matrix.sp }}; echo "SP=$SP" >> $GITHUB_ENV; D=item0/$SP; mkdir -p $D g; echo "D=$D" >> $GITHUB_ENV
           acc=$(awk -v s=$SP '$1==s{print $2}' <<'LIST'
           dva GCA_034642135.1
           dvl GCA_024498535.1
@@ -61,7 +74,7 @@ jobs:
           rm -rf g/kmctmp g/kmctmp2 g/k20.kmc_* g/fl20.kmc_* g/k20fl.kmc_* g/flanks.fa
       - name: fs9 twins, SOFTMASK 0 and 1
         run: |
-          for sm in 0 1; do
+          for sm in 0; do
             ( time SOFTMASK=$sm KCOUNT=$PWD/g/k20.txt bash sd/flankscan/fs9_twins.sh g/genome.N.fa g/copies.bed g/tw$sm > g/tw$sm.log 2>&1 ) 2>&1 | tail -3
             tail -8 g/tw$sm.log; cp g/tw$sm/summary.txt $D/twins_softmask$sm.summary.txt
             gzip -c g/tw$sm/flank_groups.tsv > $D/twins_softmask$sm.flank_groups.tsv.gz; gzip -c g/tw$sm/copy_status.tsv > $D/twins_softmask$sm.copy_status.tsv.gz
@@ -74,12 +87,16 @@ jobs:
       - name: against dar8 multicopy groups
         run: |
           git show HEAD:pan/dar8.groups.tsv.gz > g/dar8.groups.tsv.gz
-          for sm in 0 1; do
+          for sm in 0; do
             echo "== SOFTMASK=$sm" | tee -a $D/dar8_multicopy.txt
             python3 item0/compare_dar8.py --groups g/dar8.groups.tsv.gz --sp $SP --bed g/copies.bed --status g/tw$sm/copy_status.tsv \
               --pairs g/tw$sm/flank_groups.tsv --dup g/dup/dupregion.copies -o g/cmp$sm.tsv | tee -a $D/dar8_multicopy.txt
             gzip -c g/cmp$sm.tsv > $D/dar8_multicopy_softmask$sm.tsv.gz
           done
+      - name: identity of duplicated blocks (contig pairs with >= 5 twin pairs)
+        run: |
+          ( time python3 item0/block_identity.py --genome g/genome.fa --pairs g/tw0/flank_groups.tsv --bed g/copies.bed --min 5 --threads 4 -o $D/blocks ) 2>&1 | tail -14
+          gzip -f $D/blocks.pairs.tsv
       - name: example pairs for inspection
         run: |
           bash item0/examples.sh g/genome.fa g/copies.bed g/tw0/flank_groups.tsv 20 $D/examples
