@@ -1,0 +1,10 @@
+contig pairs with >= 5 twin pairs: 12 (of 676 cross-contig pairs); aligned 16.48 Mb
+block identity (alignment-length weighted, matches / alignment columns):
+  99.5-100 %: 0.0 % of aligned bp
+  99-99.5 %: 0.0 % of aligned bp
+  98-99 %: 0.0 % of aligned bp
+  97-98 %: 0.0 % of aligned bp
+  95-97 %: 0.0 % of aligned bp
+  90-95 %: 4.8 % of aligned bp
+  0-90 %: 95.2 % of aligned bp
+median fraction of contig a aligned to its partner: 0.10
