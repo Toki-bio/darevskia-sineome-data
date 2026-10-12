@@ -1,0 +1,11 @@
+== SOFTMASK=0
+all multicopy groups: 1451
+  twin_pair	1244	85.7%
+  untestable	180	12.4%
+  unexplained	14	1.0%
+  array_pair	7	0.5%
+  twin_other	6	0.4%
+copies on >= 2 contigs: 1248
+  twin_pair	1111	89.0%
+  untestable	134	10.7%
+  unexplained	3	0.2%
