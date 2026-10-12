@@ -28,9 +28,9 @@ with open(a.pairs) as fh:
 todo = [(k, v) for k, v in cnt.most_common() if v >= a.min][:a.max_pairs]
 tmp = tempfile.mkdtemp()
 
-def run(item):
-    (ca, cb), n = item
-    fa, fb = os.path.join(tmp, f'{ca}.fa'), os.path.join(tmp, f'{cb}__{ca}.fa')
+def run(job):
+    k, ((ca, cb), n) = job
+    fa, fb = os.path.join(tmp, f'{k}_a.fa'), os.path.join(tmp, f'{k}_b.fa')   # one pair per file name: a contig can be in several pairs at once
     subprocess.run(f'samtools faidx {a.genome} {ca} > {fa}; samtools faidx {a.genome} {cb} > {fb}', shell=True, check=True)
     out = subprocess.run(['minimap2', '-c', '-x', 'asm20', '-t', '1', '--secondary=no', fa, fb], capture_output=True, text=True).stdout
     os.remove(fa); os.remove(fb)
@@ -49,7 +49,7 @@ def run(item):
     ca_cov, cb_cov = cover(ivs_a), cover(ivs_b)
     return (ca, cb, size[ca], size[cb], n, ca_cov, ca_cov / size[ca], cb_cov / size[cb], 100.0 * mt / al if al else 0.0, longest, al)
 
-with cf.ThreadPoolExecutor(a.threads) as ex: res = list(ex.map(run, todo))
+with cf.ThreadPoolExecutor(a.threads) as ex: res = list(ex.map(run, enumerate(todo)))
 with open(a.output + '.pairs.tsv', 'w') as fo:
     fo.write('contig_a\tcontig_b\tlen_a\tlen_b\ttwin_pairs\taligned_a\tfrac_a\tfrac_b\tidentity\tlongest_block\n')
     for r in res: fo.write('\t'.join([r[0], r[1], str(r[2]), str(r[3]), str(r[4]), str(r[5]), f'{r[6]:.3f}', f'{r[7]:.3f}', f'{r[8]:.2f}', str(r[9])]) + '\n')

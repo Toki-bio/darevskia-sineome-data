@@ -62,7 +62,14 @@ jobs:
           bedtools maskfasta -fi g/genome.fa -bed g/pieces.bed -fo g/genome.N.fa
           samtools faidx g/genome.N.fa
           echo "$(wc -l < g/copies.bed) copies, $(wc -l < g/pieces.bed) SINE pieces masked"
+      - name: reuse committed fs9 results if present
+        run: |
+          if [ -s $D/twins_softmask0.flank_groups.tsv.gz ] && [ -s $D/twins_softmask0.copy_status.tsv.gz ]; then
+            mkdir -p g/tw0; zcat $D/twins_softmask0.flank_groups.tsv.gz > g/tw0/flank_groups.tsv; zcat $D/twins_softmask0.copy_status.tsv.gz > g/tw0/copy_status.tsv
+            echo "REUSE=1" >> $GITHUB_ENV; echo "reusing committed fs9 results"
+          fi
       - name: genome 20-mers (KMC, canonical, count > 20)
+        if: env.REUSE != '1'
         run: |
           mkdir -p g/kmctmp
           ( time kmc -k20 -ci21 -cs100000000 -m12 -t4 -fm g/genome.fa g/k20 g/kmctmp > g/kmc.log 2>&1 ) 2>&1 | tail -3
@@ -73,6 +80,7 @@ jobs:
           kmc_tools -hp transform g/k20fl dump g/k20.txt; wc -l g/k20.txt; head -2 g/k20.txt
           rm -rf g/kmctmp g/kmctmp2 g/k20.kmc_* g/fl20.kmc_* g/k20fl.kmc_* g/flanks.fa
       - name: fs9 twins, SOFTMASK 0 and 1
+        if: env.REUSE != '1'
         run: |
           for sm in 0; do
             ( time SOFTMASK=$sm KCOUNT=$PWD/g/k20.txt bash sd/flankscan/fs9_twins.sh g/genome.N.fa g/copies.bed g/tw$sm > g/tw$sm.log 2>&1 ) 2>&1 | tail -3
@@ -85,6 +93,7 @@ jobs:
           # 1.8 Gb genome (run 38166158921 was killed). Left out here; on Monsoon or with a split index later.
           mkdir -p g/dup; : > g/dup/dupregion.copies; echo "dup-region not run on the runner" > $D/dupregion.NOT_RUN
       - name: against dar8 multicopy groups
+        if: env.REUSE != '1'
         run: |
           git show HEAD:pan/dar8.groups.tsv.gz > g/dar8.groups.tsv.gz
           for sm in 0; do

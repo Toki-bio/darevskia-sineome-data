@@ -1,2 +1,2 @@
-all
-# gate c: all seven genomes, SOFTMASK=0, block identity
+dva dvl nai mix arm unm
+# gate c: block identity rerun (fs9 results reused)
