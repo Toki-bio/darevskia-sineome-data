@@ -24,3 +24,16 @@ copies on >= 2 contigs: 16193
   unexplained	513	3.2%
   twin_other	60	0.4%
   array_pair	2	0.0%
+== SOFTMASK=0
+all multicopy groups: 16328
+  twin_pair	13443	82.3%
+  untestable	2420	14.8%
+  unexplained	401	2.5%
+  twin_other	60	0.4%
+  array_pair	4	0.0%
+copies on >= 2 contigs: 16193
+  twin_pair	13357	82.5%
+  untestable	2386	14.7%
+  unexplained	391	2.4%
+  twin_other	58	0.4%
+  array_pair	1	0.0%
