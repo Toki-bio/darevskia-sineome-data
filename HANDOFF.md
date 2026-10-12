@@ -66,7 +66,7 @@ FASTA headers are cut to the first word (GenBank accession). SINE: dar_squam1 (3
 
 | work | waits for |
 |---|---|
-| within-genome uniqueness (plan item 0, new) | go-ahead; needs no subfamilies or reads |
+| within-genome uniqueness (plan item 0) | gates a–c done (branch `item0`, `item0/RESULTS.md`): fs9 explains 74–91 % of dar8 multicopy groups; dva/dvl haplotigs (≥ 99 %), arm/nai two divergent haplotypes in large blocks (95–98 %); fs9 5' masking bug fixed on SINEderella `claude/fs9-5prime-kmer-mask`. Next: haplotig/homeolog/segdup classes in the registry; reads to confirm by depth |
 | all remaining SINE work (haplotig rule, satellites, dimers, genes × SINE age, subfamily assignment of all copies) | Sergei's peeling of the SubFam chunks; reassignment may follow |
 | BPP full run, parthenogen phasing, sineclose on M sites | raw reads (expected within days) |
 | Cactus | Sergei starting `plans/cactus-monsoon-prompt.md` in Claude Code on Monsoon |
