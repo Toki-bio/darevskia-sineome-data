@@ -1,2 +1,2 @@
-dva dvl nai mix arm unm
-# gate c: block identity rerun (fs9 results reused)
+dva dvl nai mix arm unp unm
+# gate c: block identity rerun, gap-compressed identity (fs9 results reused)

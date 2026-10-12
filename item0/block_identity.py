@@ -34,11 +34,13 @@ def run(job):
     subprocess.run(f'samtools faidx {a.genome} {ca} > {fa}; samtools faidx {a.genome} {cb} > {fb}', shell=True, check=True)
     out = subprocess.run(['minimap2', '-c', '-x', 'asm20', '-t', '1', '--secondary=no', fa, fb], capture_output=True, text=True).stdout
     os.remove(fa); os.remove(fb)
-    al = mt = 0; longest = 0; ivs_a = []; ivs_b = []
+    al = mt = 0; dsum = 0.0; longest = 0; ivs_a = []; ivs_b = []
     for line in out.splitlines():
         f = line.split('\t')
         if int(f[11]) < 1: continue                   # MAPQ 0: repeat-driven
         m, L = int(f[9]), int(f[10]); mt += m; al += L; longest = max(longest, L)
+        de = next((float(t[5:]) for t in f[12:] if t.startswith('de:f:')), None)    # gap-compressed divergence (indels count once)
+        if de is not None: dsum += de * L
         ivs_b.append((int(f[2]), int(f[3]))); ivs_a.append((int(f[7]), int(f[8])))
     def cover(iv):
         iv.sort(); tot = 0; s = e = -1
@@ -47,12 +49,13 @@ def run(job):
             else: e = max(e, y)
         return tot + max(0, e - s)
     ca_cov, cb_cov = cover(ivs_a), cover(ivs_b)
-    return (ca, cb, size[ca], size[cb], n, ca_cov, ca_cov / size[ca], cb_cov / size[cb], 100.0 * mt / al if al else 0.0, longest, al)
+    return (ca, cb, size[ca], size[cb], n, ca_cov, ca_cov / size[ca], cb_cov / size[cb], 100.0 * (1 - dsum / al) if al else 0.0, longest, al,
+            100.0 * mt / al if al else 0.0)
 
 with cf.ThreadPoolExecutor(a.threads) as ex: res = list(ex.map(run, enumerate(todo)))
 with open(a.output + '.pairs.tsv', 'w') as fo:
-    fo.write('contig_a\tcontig_b\tlen_a\tlen_b\ttwin_pairs\taligned_a\tfrac_a\tfrac_b\tidentity\tlongest_block\n')
-    for r in res: fo.write('\t'.join([r[0], r[1], str(r[2]), str(r[3]), str(r[4]), str(r[5]), f'{r[6]:.3f}', f'{r[7]:.3f}', f'{r[8]:.2f}', str(r[9])]) + '\n')
+    fo.write('contig_a\tcontig_b\tlen_a\tlen_b\ttwin_pairs\taligned_a\tfrac_a\tfrac_b\tidentity_gapcompressed\tlongest_block\tidentity_blastlike\n')
+    for r in res: fo.write('\t'.join([r[0], r[1], str(r[2]), str(r[3]), str(r[4]), str(r[5]), f'{r[6]:.3f}', f'{r[7]:.3f}', f'{r[8]:.2f}', str(r[9]), f'{r[11]:.2f}']) + '\n')
 bins = [(99.5, 101), (99, 99.5), (98, 99), (97, 98), (95, 97), (90, 95), (0, 90)]
 w = collections.Counter(); tot = sum(r[10] for r in res)
 for r in res:
@@ -60,7 +63,7 @@ for r in res:
         if lo <= r[8] < hi: w[(lo, hi)] += r[10]
 with open(a.output + '.summary.txt', 'w') as fo:
     fo.write(f'contig pairs with >= {a.min} twin pairs: {len(todo)} (of {len(cnt)} cross-contig pairs); aligned {tot / 1e6:.2f} Mb\n')
-    fo.write('block identity (alignment-length weighted, matches / alignment columns):\n')
+    fo.write('block identity (gap-compressed: 1 - minimap2 de; alignment-length weighted):\n')
     for lo, hi in bins: fo.write(f'  {lo}-{min(hi, 100)} %: {100 * w[(lo, hi)] / tot if tot else 0:.1f} % of aligned bp\n')
     fr = sorted(r[6] for r in res)
     if fr: fo.write(f'median fraction of contig a aligned to its partner: {fr[len(fr) // 2]:.2f}\n')
