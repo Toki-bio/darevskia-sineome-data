@@ -1,0 +1,7 @@
+array	64	0.1%
+copies	100996
+masked	22354	22.1%
+twin1	24250	24.0%
+twin2	565	0.6%
+unique	53749	53.2%
+untestable	14	0.0%
